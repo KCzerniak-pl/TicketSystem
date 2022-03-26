@@ -13,7 +13,7 @@ namespace Database.Entities
 
         [Column(TypeName = "nvarchar(50)")]
         [Required]
-        public string? RoleName { get; set; } = default!;
+        public string RoleName { get; set; } = default!;
 
         [Required]
         public bool ShowAll { get; set; } = default!;
