@@ -23,7 +23,7 @@ namespace TicketSystemWebApi.Models
         public DateTimeOffset DateTimeModified { get; set; }
 
         [Required]
-        public string Subject { get; set; } = default!;
+        public string Title { get; set; } = default!;
 
         [Required]
         public Guid UserID { get; set; }

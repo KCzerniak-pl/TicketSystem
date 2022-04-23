@@ -33,7 +33,7 @@ namespace Database.Entities
 
         [Column(TypeName = "nvarchar(75)")]
         [Required]
-        public string Subject { get; set; } = default!;
+        public string Title { get; set; } = default!;
 
         // Relationships one-to-many.
         public User User { get; set; } = default!;

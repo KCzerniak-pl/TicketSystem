@@ -38,7 +38,7 @@ namespace TicketSystemWebApi.Mapping
         }
 
         // Mapping data from database to DTO - login.
-        internal static LoginResponseDto LoginResponseToDto(Database.Entities.User? user, bool success, string? error)
+        internal static LoginResponseDto LoginResponseToDto(bool success, string error, Database.Entities.User? user)
         {
             LoginResponseDto returnValue = new LoginResponseDto();
 
@@ -48,7 +48,7 @@ namespace TicketSystemWebApi.Mapping
                 returnValue.UserName = string.Format("{0} {1}", user.FirstName, user.LastName);
             }
             returnValue.Success = success;
-            returnValue.Error = error!;
+            returnValue.Error = error;
 
             return returnValue;
         }

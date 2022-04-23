@@ -79,7 +79,7 @@ namespace Database.Migrations.TicketsMigrations
                     CategoryID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DateTimeCreated = table.Column<DateTimeOffset>(type: "datetimeoffset(0)", nullable: false),
                     DateTimeModified = table.Column<DateTimeOffset>(type: "datetimeoffset(0)", nullable: false),
-                    Subject = table.Column<string>(type: "nvarchar(75)", nullable: false)
+                    Title = table.Column<string>(type: "nvarchar(75)", nullable: false)
                 },
                 constraints: table =>
                 {

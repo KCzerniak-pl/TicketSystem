@@ -1,6 +1,7 @@
 ﻿using Database;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using TicketSystemWebApi.Mapping;
 using TicketSystemWebApi.Models;
@@ -12,27 +13,35 @@ namespace TicketSystemWebApi.Controllers
     [Produces("application/json")]
     public class TicketsController : ControllerBase
     {
-        // Required references to the library "Database".
-        private readonly TicketsDbContext _dbContext;
+        private readonly TicketsDbContext _ticketsDbContext;
 
-        public TicketsController(TicketsDbContext dbContext)
+        // Required configuration of connection context with the database in the Program.cs file and references to the library "Database".
+        public TicketsController(TicketsDbContext ticketsDbContext)
         {
-            _dbContext = dbContext;
+            _ticketsDbContext = ticketsDbContext;
         }
 
-        //GET: api/<ValuesController>/<userID>
-        [HttpGet("{userID}")]
-        public async Task<ActionResult<IEnumerable<GetTicketsDto>>> GetTicketsForUser([FromRoute] Guid userID)
+        //GET: api/<ValuesController>?skip=<skip>&take=<take>&userID=<userID>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<GetTicketsDto>>> GetTickets([FromQuery, BindRequired] int skip, [FromQuery, BindRequired] int take, [FromQuery] Guid userID = default)
         {
-            if (_dbContext.Database.CanConnect())
+            if (_ticketsDbContext.Database.CanConnect())
             {
-                // Retrieving data from database about selected ticket and remapping to DTO.
-                // Required configuration of connection context with the database in the Startup.cs file.
-                IEnumerable<GetTicketsDto> result = await _dbContext.Tickets.Where(p => p.UserID == userID).Include(p => p.User).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToListAsync();
+                IEnumerable<GetTicketsDto> result;
+                if (userID == default)
+                {
+                    // Retrieving data from database about all ticket and remapping to DTO.
+                    result = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeCreated).Skip(skip).Take(take).Include(p => p.User).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
+                }
+                else
+                {
+                    // Retrieving data from database about all ticket for user and remapping to DTO.
+                    result = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeCreated).Where(p => p.UserID == userID).Skip(skip).Take(take).Include(p => p.User).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
+                }
 
                 if (result.Any())
                 {
-                    return StatusCode(StatusCodes.Status200OK, result.OrderByDescending(p => p.DateTimeCreated));
+                    return StatusCode(StatusCodes.Status200OK, result);
                 }
 
                 return StatusCode(StatusCodes.Status404NotFound);
@@ -41,22 +50,25 @@ namespace TicketSystemWebApi.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
 
-        //GET: api/<ValuesController>
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetTicketsDto>>> GetTickets()
+        //GET: api/<ValuesController>/Count?userID=<userID>
+        [HttpGet("Count")]
+        public async Task<ActionResult<int>> GetTicketsCount([FromQuery] Guid userID = default)
         {
-            if (_dbContext.Database.CanConnect())
+            if (_ticketsDbContext.Database.CanConnect())
             {
-                // Retrieving data from database about selected ticket and remapping to DTO.
-                // Required configuration of connection context with the database in the Startup.cs file.
-                IEnumerable<GetTicketsDto> result = await _dbContext.Tickets.Include(p => p.User).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToListAsync();
-
-                if (result.Any())
+                int result = 0;
+                if (userID == default)
                 {
-                    return StatusCode(StatusCodes.Status200OK, result.OrderByDescending(p => p.DateTimeCreated));
+                    // Count all ticket in database.
+                    result = await _ticketsDbContext.Tickets.CountAsync();
+                }
+                else
+                {
+                    // Count selected ticket in database.
+                    result = await _ticketsDbContext.Tickets.Where(p => p.UserID == userID).CountAsync();
                 }
 
-                return StatusCode(StatusCodes.Status404NotFound);
+                return StatusCode(StatusCodes.Status200OK, result);
             }
 
             return StatusCode(StatusCodes.Status500InternalServerError);

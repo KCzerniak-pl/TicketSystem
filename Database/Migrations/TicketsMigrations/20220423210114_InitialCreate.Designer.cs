@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations.TicketsMigrations
 {
     [DbContext(typeof(TicketsDbContext))]
-    [Migration("20220318215836_InitialCreate")]
+    [Migration("20220423210114_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -100,7 +100,7 @@ namespace Database.Migrations.TicketsMigrations
                     b.Property<Guid>("StatusID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Subject")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(75)");
 

@@ -26,7 +26,7 @@ namespace TicketSystemWebApi.Models
         public DateTimeOffset DateTimeModified { get; set; }
 
         [Required]
-        public string Subject { get; set; } = default!;
+        public string Title { get; set; } = default!;
 
         [Required]
         public Guid UserID { get; set; }
@@ -38,8 +38,5 @@ namespace TicketSystemWebApi.Models
         public string Email { get; set; } = default!;
 
         public List<GetMessagesDto> Messages { get; set; } = default!;
-
-        [Required]
-        public GetPermissionsDto Permission { get; set; } = default!;
     }
 }

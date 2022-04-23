@@ -13,56 +13,60 @@ namespace TicketSystemWebApi.Controllers
     public class AccountController : ControllerBase
     {
         // Required references to the library "Database".
-        private readonly UsersDbContext _dbContext;
+        private readonly UsersDbContext _usersDbContext;
 
-        public AccountController(UsersDbContext dbContext)
+        // Required configuration of connection context with the database in the Program.cs file.
+        public AccountController(UsersDbContext usersDbContext)
         {
-            _dbContext = dbContext;
+            _usersDbContext = usersDbContext;
         }
 
         //GET: api//<ValuesController>
         [HttpPost]
-        public async Task<ActionResult<LoginResponseDto>> PostLoginRequest([FromBody] LoginRequestDto user)
+        public async Task<ActionResult<LoginResponseDto>> PostLoginRequest([FromBody] LoginRequestDto postLogin)
         {
             if (ModelState.IsValid)
             {
-                // Get user by e-mail address.
-                var result = await _dbContext.Users.SingleOrDefaultAsync(p => p.Email == user.Email);
-
-                if (result != null)
+                try
                 {
+                    // Get user by e-mail address.
+                    Database.Entities.User user = await _usersDbContext.Users.Where(p => p.Email == postLogin.Email).FirstAsync();
+
                     // AspNetCore Identity.
                     PasswordHasher<string> password = new PasswordHasher<string>();
-                    var verificationResult = password.VerifyHashedPassword(user.Email, result.PasswordHash, user.Password);
+                    PasswordVerificationResult verificationResult = password.VerifyHashedPassword(postLogin.Email, user.PasswordHash, postLogin.Password);
 
                     if (verificationResult == PasswordVerificationResult.Success)
                     {
-                        return StatusCode(StatusCodes.Status200OK, Mapping.AccountMapping.LoginResponseToDto(result, true, null));
+                        return StatusCode(StatusCodes.Status200OK, AccountMapping.LoginResponseToDto(true, String.Empty, user));
                     }
                 }
-
-                return StatusCode(StatusCodes.Status400BadRequest, Mapping.AccountMapping.LoginResponseToDto(null, false, "Błędny login lub hasło"));
+                catch (Exception)
+                {
+                    return StatusCode(StatusCodes.Status400BadRequest, AccountMapping.LoginResponseToDto(false, "Błędny login lub hasło", null));
+                }
             }
 
-            return StatusCode(StatusCodes.Status400BadRequest, Mapping.AccountMapping.LoginResponseToDto(null, false, "Nieprawidłowe dane"));
+            return StatusCode(StatusCodes.Status400BadRequest, AccountMapping.LoginResponseToDto(false, "Nieprawidłowe dane", null));
         }
 
         //GET: api/<ValuesController>/<UserID>
         [HttpGet("{userID}")]
-        public async Task<ActionResult<IEnumerable<GetUsersDto>>> GetUserData([FromRoute] Guid userID)
+        public async Task<ActionResult<GetUsersDto>> GetUserData([FromRoute] Guid userID)
         {
-            if (_dbContext.Database.CanConnect())
+            if (_usersDbContext.Database.CanConnect())
             {
-                // Retrieving data from database about all ticket of the selected user and remapping to DTO.
-                // Required configuration of connection context with the database in the Startup.cs file.
-                var result = await _dbContext.Users.Where(p => p.UserID == userID).Include(p => p.Role).Select(p => AccountMapping.GetUsersToDto(p)).ToListAsync();
-
-                if (result != null)
+                try
                 {
-                    return StatusCode(StatusCodes.Status200OK, result);
-                }
+                    // Retrieving data from database about all ticket of the selected user and remapping to DTO.
+                    GetUsersDto user = await _usersDbContext.Users.Where(p => p.UserID == userID).Include(p => p.Role).Select(p => AccountMapping.GetUsersToDto(p)).FirstAsync();
 
-                return StatusCode(StatusCodes.Status404NotFound);
+                    return StatusCode(StatusCodes.Status200OK, user);
+                }
+                catch (Exception)
+                {
+                    return StatusCode(StatusCodes.Status404NotFound);
+                }
             }
 
             return StatusCode(StatusCodes.Status500InternalServerError);

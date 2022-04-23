@@ -2,18 +2,15 @@
 
 namespace TicketSystemWebApi.Models
 {
-    public class PostTicketDto
+    public class PutTicketTitleDto
     {
         [Required]
         public Guid UserID { get; set; }
 
         [Required]
-        public Guid CategoryID { get; set; }
+        public Guid TicketID { get; set; }
 
         [Required]
         public string Title { get; set; } = default!;
-
-        [Required]
-        public string Information { get; set; } = default!;
     }
 }

@@ -98,7 +98,7 @@ namespace Database.Migrations.TicketsMigrations
                     b.Property<Guid>("StatusID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Subject")
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(75)");
 

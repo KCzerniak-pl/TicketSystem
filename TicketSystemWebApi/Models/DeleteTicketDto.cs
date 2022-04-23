@@ -2,12 +2,13 @@
 
 namespace TicketSystemWebApi.Models
 {
-    public class GetPermissionsDto
+    public class DeleteTicketDto
     {
         [Required]
-        public bool ShowAll { get; set; }
+        public Guid UserID { get; set; }
 
         [Required]
-        public bool CanAccepted { get; set; }
+        public Guid TicketID { get; set; }
+
     }
 }

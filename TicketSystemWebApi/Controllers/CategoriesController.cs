@@ -12,22 +12,22 @@ namespace TicketSystemWebApi.Controllers
     public class CategoriesController : ControllerBase
     {
         // Required references to the library "Database".
-        private readonly CategoriesDbContext _dbContext;
+        private readonly CategoriesDbContext _categoriesDbContext;
 
-        public CategoriesController(CategoriesDbContext dbContext)
+        // Required configuration of connection context with the database in the Program.cs file.
+        public CategoriesController(CategoriesDbContext categoriesDbContext)
         {
-            _dbContext = dbContext;
+            _categoriesDbContext = categoriesDbContext;
         }
 
         // GET: api/<ValuesController>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetCategoriesDto>>> GetCategories()
         {
-            if (_dbContext.Database.CanConnect())
+            if (_categoriesDbContext.Database.CanConnect())
             {
                 // Retrieving data from database about all categories and remapping to DTO.
-                // Required configuration of connection context with the database in the Startup.cs file.
-                IEnumerable<GetCategoriesDto> result = await _dbContext.Categories.Select(p => CategoryMapping.GetCategoriesToDto(p)).ToArrayAsync();
+                IEnumerable<GetCategoriesDto> result = await _categoriesDbContext.Categories.Select(p => CategoryMapping.GetCategoriesToDto(p)).ToArrayAsync();
 
                 if (result.Any())
                 {

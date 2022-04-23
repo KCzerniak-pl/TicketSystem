@@ -17,7 +17,7 @@ namespace TicketSystemWebApi.Mapping
             returnValue.CategoryName = ticket.Category.Name;
             returnValue.DateTimeCreated = ticket.DateTimeCreated;
             returnValue.DateTimeModified = ticket.DateTimeModified;
-            returnValue.Subject = ticket.Subject;
+            returnValue.Title = ticket.Title;
             returnValue.UserID = ticket.User.UserID;
             returnValue.UserName = String.Format("{0} {1}", ticket.User.FirstName, ticket.User.LastName);
             returnValue.Email = ticket.User.Email;
@@ -40,7 +40,7 @@ namespace TicketSystemWebApi.Mapping
             returnValue.CategoryName = ticket.Category.Name;
             returnValue.DateTimeCreated = ticket.DateTimeCreated;
             returnValue.DateTimeModified = ticket.DateTimeModified;
-            returnValue.Subject = ticket.Subject;
+            returnValue.Title = ticket.Title;
             returnValue.UserID = ticket.UserID;
             returnValue.UserName = String.Format("{0} {1}", ticket.User.FirstName, ticket.User.LastName);
 
@@ -48,17 +48,17 @@ namespace TicketSystemWebApi.Mapping
         }
 
         // Mapping DTO to data save in database - new ticket.
-        internal static Database.Entities.Ticket PostTicketFromDto(PostTicketDto ticket)
+        internal static Database.Entities.Ticket PostTicketFromDto(PostTicketDto ticket, Guid statusForNewTicket)
         {
             Database.Entities.Ticket returnValue = new Database.Entities.Ticket();
 
             returnValue.TicketID = Guid.NewGuid();
             returnValue.UserID = ticket.UserID;
-            returnValue.StatusID = new Guid("0b12f12f-d6ff-4a90-8f73-c26303ce5a7d");
+            returnValue.StatusID = statusForNewTicket;
             returnValue.CategoryID = ticket.CategoryID;
             returnValue.DateTimeCreated = DateTime.Now;
             returnValue.DateTimeModified = returnValue.DateTimeCreated;
-            returnValue.Subject = ticket.Subject;
+            returnValue.Title = ticket.Title;
 
             Database.Entities.Message message = new Database.Entities.Message()
             {
@@ -74,23 +74,28 @@ namespace TicketSystemWebApi.Mapping
             return returnValue;
         }
 
-        // Mapping DTO to data update in database - selected ticket.
-        internal static Database.Entities.Ticket PutTicketFromDto(Database.Entities.Ticket returnValue, PutTicketDto ticket)
+        // Mapping DTO to data update in database - status.
+        internal static Database.Entities.Ticket PutTicketStatusFromDto(Database.Entities.Ticket returnValue, PutTicketStatusDto ticket)
         {
+            returnValue.StatusID = ticket.StatusID;
+            returnValue.DateTimeModified = DateTime.Now;
 
-            if (ticket.StatusID != Guid.Empty)
-            {
-                returnValue.StatusID = ticket.StatusID;
-            }
-            else if (ticket.CategoryID != Guid.Empty)
-            {
-                returnValue.CategoryID = ticket.CategoryID;
-            }
-            else if (ticket.Subject != null)
-            {
-                returnValue.Subject = ticket.Subject;
-            }
+            return returnValue;
+        }
 
+        // Mapping DTO to data update in database - title.
+        internal static Database.Entities.Ticket PutTicketTitleFromDto(Database.Entities.Ticket returnValue, PutTicketTitleDto ticket)
+        {
+            returnValue.Title = ticket.Title;
+            returnValue.DateTimeModified = DateTime.Now;
+
+            return returnValue;
+        }
+
+        // Mapping DTO to data update in database - category.
+        internal static Database.Entities.Ticket PutTicketCategoryFromDto(Database.Entities.Ticket returnValue, PutTicketCategoryDto ticket)
+        {
+            returnValue.CategoryID = ticket.CategoryID;
             returnValue.DateTimeModified = DateTime.Now;
 
             return returnValue;
