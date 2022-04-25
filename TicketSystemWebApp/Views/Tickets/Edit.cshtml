@@ -1,0 +1,219 @@
+﻿@model TicketSystemWebApp.Models.TicketViewModel
+
+<div id="ticketEdit" class="container mt-content border bg-light rounded-3 mb-9">
+    <div class="row text-black-50 text-uppercase text-center">
+        <div class="col-12 mt-3">
+            <div class="border-bottom">
+                <span class="h5">Edytuj zgłoszenie</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3 text-black-50">
+        <dl class="row">
+            <dt class="col-12 col-sm-4 col-lg-2">Identyfikator:</dt>
+            <dd class="col-12 col-sm-8 col-lg-10">@Model.TicketID</dd>
+            <dt class="col-12 col-sm-4 col-lg-2">Data utworzenia:</dt>
+            <dd class="col-12 col-sm-8 col-lg-10">@Model.DateTimeCreated.ToString("dd/MM/yyyy HH:mm:ss")</dd>
+            <dt class="col-12 col-sm-4 col-lg-2">Data zmiany:</dt>
+            <dd class="col-12 col-sm-8 col-lg-10">@Model.DateTimeModified.ToString("dd/MM/yyyy HH:mm:ss")</dd>
+            <dt class="col-12 col-sm-4 col-lg-2">Status:</dt>
+            <dd class="col-12 col-sm-8 col-lg-10">
+                @if (Model.StatusID == new Guid(ViewBag.StatusNew))
+                {
+                    <span class="badge bg-warning">@Model.StatusName</span>
+                }
+                else if (Model.StatusID == new Guid(ViewBag.StatusAccept))
+                {
+                    <span class="badge bg-success">@Model.StatusName</span>
+                }
+                else if (Model.StatusID == new Guid(ViewBag.StatusDiscard))
+                {
+                    <span class="badge bg-danger">@Model.StatusName</span>
+                }
+                else
+                {
+                    <span class="badge bg-primary">@Model.StatusName</span>
+                }
+            </dd>
+        </dl>
+    </div>
+
+    <div class="row text-black-50">
+        <div class="col-12 col-lg-4 mt-3">
+            <div class="border bg-light rounded-3 px-3">
+                <div class="d-block border-bottom px-2 pt-3 pb-1">
+                    <i class="fas fa-file fa-lg"></i>
+                    <span class="mx-2">Temat</span>
+                    <span><button type="button" data-mdb-toggle="modal" data-mdb-target="#titleUpdateModal" class="btn btn-info btn-sm" role="button"><i class="fas fa-edit"></i></button></span>
+                </div>
+                <div class="my-2 px-2">
+                    @Model.Title
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4 mt-3">
+            <div class="border bg-light rounded-3 px-3">
+                <div class="d-block border-bottom px-2 pt-3 pb-1">
+                    <i class="fas fa-hand-point-right fa-lg"></i>
+                    <span class="mx-2">Rodzaj zgłoszenia</span>
+                    <button type="button" data-mdb-toggle="modal" data-mdb-target="#categoryUpdateModal" class="btn btn-info btn-sm" role="button"><i class="fas fa-edit"></i></button>
+                </div>
+                <div class="my-2 px-2">
+                    @Model.CategoryName
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4 mt-3">
+            <div class="border bg-light rounded-3 px-3">
+                <div class="d-block border-bottom px-2 pt-3 pb-1">
+                    <i class="fas fa-user-plus fa-lg"></i>
+                    <span class="mx-2">Przypisz technika</span>
+                    @if (ViewBag.CanAccepted)
+                    {
+                        <button type="button" data-mdb-toggle="modal" data-mdb-target="#agentUpdateModal" class="btn btn-info btn-sm" role="button"><i class="fas fa-edit"></i></button>
+                    }
+                </div>
+                <div class="my-2 px-2">
+                    Adam Jabłoński
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-2 text-black-50">
+
+        <div class="text-end">
+            <ul class="d-inline list-inline">
+                @using (Html.BeginForm("statusupdate", "tickets", FormMethod.Post))
+                {
+                    @if (ViewBag.CanAccepted)
+                    {
+                        @Html.Hidden("ticketID", Model.TicketID)
+
+                        if (Model.StatusID != new Guid(ViewBag.StatusAccept))
+                        {
+                            <li class="list-inline-item align-middle">
+                                <button type="submit" name="statusID" value="@ViewBag.StatusAccept" class="btn btn-success my-3">
+                                    <i class="fas fa-check me-1"></i>
+                                    Zaakceptuj zgłoszenie
+                                </button>
+                            </li>
+                        }
+
+                        if (Model.StatusID != new Guid(ViewBag.StatusDiscard))
+                        {
+                            <li class="list-inline-item align-middle">
+                                <button type="submit" name="statusID" value="@ViewBag.StatusDiscard" class="btn btn-danger my-3">
+                                    <i class="fas fa-times me-1"></i>
+                                    Odrzuć zgłoszenie
+                                </button>
+                            </li>
+                        }
+                    }
+
+                    <li class="list-inline-item my-3 align-middle">
+                        <a href="@Url.Action("index", "tickets")" role="button" class="btn btn-primary">
+                            <i class="fas fa-list me-1"></i>
+                            Powrót do listy
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="row text-black-50">
+        @foreach (var message in Model.Messages)
+        {
+            <div class="col-12 mt-3">
+                @if (message.UserID == Model.UserID)
+                {
+                    <div class="border rounded-3 px-3 py-2" style="background-color: #f7e3e3;">
+                        <div class="fw-bold">@message.UserName</div>
+                        <div class="small text-muted">[dodano: @message.DateTimeCreated.ToString("dd/MM/yyyy HH:mm:ss")]</div>
+                        <div class="mt-2">@Html.Raw(System.Web.HttpUtility.HtmlDecode(message.Information))</div>
+                    </div>
+                }
+                else
+                {
+                    <div class="border rounded-3 px-3 py-2" style="background-color: #b4d6e7;">
+                        <div class="fw-bold">@message.UserName</div>
+                        <div class="small text-muted">[dodano: @message.DateTimeCreated.ToString("dd/MM/yyyy HH:mm:ss")]</div>
+                        <div class="mt-2">@Html.Raw(System.Web.HttpUtility.HtmlDecode(message.Information))</div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="row mt-4 text-black-50">
+        @using (Html.BeginForm("messagenew", "tickets", FormMethod.Post, new { @id = "formMessageNew" }))
+        {
+            <div class="col-12">
+                @Html.Label("Information", "Napisz wiadomość", new { @class = "form-label text-black-50" })
+                @Html.TextArea("Information", new { @rows = "4", @class = "form-control shadow-none" })
+                <span class="text-danger">To pole jest wymagane</span>
+            </div>
+            <div>
+                @Html.Hidden("ticketID", Model.TicketID)
+            </div>
+            <div class="text-end my-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-reply me-1"></i>
+                    Wyślij wiadomość
+                </button>
+            </div>
+        }
+    </div>
+
+    @await Html.PartialAsync("_TitleUpdateModalPartial")
+    @await Html.PartialAsync("_CategoryUpdateModalPartial")
+    @await Html.PartialAsync("_AgentUpdateModalPartial")
+</div>
+
+@section Scripts{
+<!-- Bootstrap Maxlength js -->
+<script src="~/lib/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+<!-- TinyMCE  js -->
+<script src="~/lib/tinymce/tinymce.min.js"></script>
+
+<!-- Validation Custom  js -->
+<script src="~/js/validationCustom.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function ($) {
+        /* TinyMCE script */
+        tinymce.init({
+            selector: '#formMessageNew #Information',
+            language: "pl",
+            menubar: false,
+            plugins: "link advlist lists preview",
+            toolbar: 'undo redo | forecolor backcolor | bold italic underline strikethrough | fontsizeselect | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | link | preview',
+            setup: function (editor) {
+                editor.on('keyup', function () {
+                    tinymce.triggerSave();
+
+                    var field = document.querySelector(editor.settings.selector);
+                    validationField(field);
+                });
+            }
+        });
+
+        /* Bootstrap Maxlength script */
+        $("input#Title").maxlength({
+            alwaysShow: true,
+            warningClass: "badge bg-success",
+            limitReachedClass: "badge bg-danger",
+            placement: "top-right-inside"
+        });
+
+        /* Validation Custom */
+        validationCustom(['#formMessageNew #Information'], '#formMessageNew button[type="submit"]');
+        validationCustom(['#formTitleUpdate #Title'], '#formTitleUpdate button[type="submit"]');
+    });
+</script>
+}

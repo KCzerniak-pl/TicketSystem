@@ -5,7 +5,9 @@ VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Database", "Database\Database.csproj", "{FA12F473-44D3-4281-A618-F90A4E4D1456}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketSystemWebApi", "TicketSystemWebApi\TicketSystemWebApi.csproj", "{B2F909E1-C78C-431F-AB1C-3EC50A0E8314}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicketSystemWebApi", "TicketSystemWebApi\TicketSystemWebApi.csproj", "{B2F909E1-C78C-431F-AB1C-3EC50A0E8314}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicketSystemWebApp", "TicketSystemWebApp\TicketSystemWebApp.csproj", "{24C23912-BB12-4317-92B0-4D9DBA7F841C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{B2F909E1-C78C-431F-AB1C-3EC50A0E8314}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2F909E1-C78C-431F-AB1C-3EC50A0E8314}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2F909E1-C78C-431F-AB1C-3EC50A0E8314}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24C23912-BB12-4317-92B0-4D9DBA7F841C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24C23912-BB12-4317-92B0-4D9DBA7F841C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24C23912-BB12-4317-92B0-4D9DBA7F841C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24C23912-BB12-4317-92B0-4D9DBA7F841C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

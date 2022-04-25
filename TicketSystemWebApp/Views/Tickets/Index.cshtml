@@ -1,0 +1,123 @@
+﻿@model IEnumerable<TicketSystemWebApp.Models.TicketViewModel>
+
+<div id="ticketsIndex" class="container mt-content border bg-light rounded-3 mb-9">
+    @{
+        if (Model.Count() == 0)
+        {
+            <div class="col-12 text-center text-black-50 mt-3">
+                Nie ma jeszcze żadnych dodanych zgłoszeń.
+            </div>
+            <div class="text-center">
+                <a href="@Url.Action("new", "tickets")" role="button" class="btn btn-primary my-3">
+                    <i class="fas fa-plus me-1"></i>
+                    Nowe zgłoszenie
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="text-end">
+                <a href="@Url.Action("new", "tickets")" role="button" class="btn btn-primary my-3">
+                    <i class="fas fa-plus me-1"></i>
+                    Nowe zgłoszenie
+                </a>
+            </div>
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Użytkownik</th>
+                        <th scope="col">Data utworzenia</th>
+                        <th scope="col">Data ostatniej zmiany</th>
+                        <th scope="col">Temat</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Rodzaj zgłoszenia</th>
+                        <th scope="col">Usuń</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int i = 1;
+                        foreach (var ticket in Model)
+                        {
+                            <tr class="table-row" data-href="@Url.Action("edit", "ticket")/@ticket.TicketID">
+                                <th scope="row">@(i++)</th>
+                                <td>@ticket.UserName</td>
+                                <td>@ticket.DateTimeCreated.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td>@ticket.DateTimeModified.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td>@ticket.Title</td>
+                                <td>
+                                    @if (ticket.StatusID == new Guid(ViewBag.StatusNew))
+                                    {
+                                        <span class="badge bg-warning">@ticket.StatusName</span>
+                                    }
+                                    else if (ticket.StatusID == new Guid(ViewBag.StatusAccept))
+                                    {
+                                        <span class="badge bg-success">@ticket.StatusName</span>
+                                    }
+                                    else if (ticket.StatusID == new Guid(ViewBag.StatusDiscard))
+                                    {
+                                        <span class="badge bg-danger">@ticket.StatusName</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-primary">@ticket.StatusName</span>
+                                    }
+                                </td>
+                                <td>@ticket.CategoryName</td>
+                                <td><button type="button" data-mdb-toggle="modal" data-mdb-target="#ticketDeleteModal" onclick="ticketDelete(event, '@ticket.TicketID')" class="btn btn-danger btn-sm"><i class="fas fa-remove"></i></button></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            @await Html.PartialAsync("_TicketDeleteModalPartial")
+            <div class="text-end">
+                <a href="@Url.Action("new", "tickets")" role="button" class="btn btn-primary my-3">
+                    <i class="fas fa-plus me-1"></i>
+                    Nowe zgłoszenie
+                </a>
+            </div>
+
+            <nav aria-label="Ticets results pages">
+                <ul class="pagination justify-content-center">
+                    @for (int p = 1; p <= ViewBag.totalPages; p++)
+                    {
+                        <li class="page-item @(p == ViewBag.Page ? "active" : null)">
+                            <a asp-route-page="@p" class="page-link">@p</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    }
+</div>
+
+@section StyleSheet{
+<style>
+    /* Cursor for table row */
+    .table-row {
+        cursor: pointer;
+    }
+</style>
+}
+
+@section Scripts{
+<script type="text/javascript">
+    /* Add link to delete ticket in modal window */
+    function ticketDelete(e, ticketID) {
+        /* Interrupted click in table row */
+        e.stopImmediatePropagation();
+
+        var path = "/ticket/delete/" + ticketID;
+        document.getElementById("btnTicketDeleteConfirm").href = path;
+    }
+
+    $(document).ready(function ($) {
+        /* Add click to table row */
+        $(".table-row").click(function () {
+            window.document.location = $(this).data("href");
+        });
+    });
+</script>
+}

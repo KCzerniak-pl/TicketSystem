@@ -1,0 +1,73 @@
+﻿@model TicketSystemWebApp.Models.LoginViewModel
+@{
+    ViewBag.Title = "Strona główna";
+}
+
+<div id="intro" class="bg-image shadow-1-strong">
+    <video playsinline autoplay muted loop>
+        <source src="~/video/animation.mp4" type="video/mp4" />
+    </video>
+
+    <div class="mask">
+        <div class="container mt-content">
+            <div class="row text-black-50">
+                <div class="col-12 col-lg-6 offset-0 offset-lg-3 border bg-light rounded-3 shadow-1-strong p-5">
+                    <div class="border bg-light rounded-3 shadow-1-strong p-5">
+                        @if (ViewBag.Errors != null)
+                        {
+                            <div class="text-danger mb-2">@ViewBag.Errors</div>
+                        }
+
+                        @using (Html.BeginForm("login", "account", FormMethod.Post, new { @class = "row g-4" }))
+                        {
+                            <div>
+                                @Html.LabelFor(x => x.Email, "Adres e-mail", new { @class = "form-label text-black-50" })
+                                @Html.TextBoxFor(x => x.Email, null, new { @class = "form-control shadow-none" })
+                            </div>
+                            <div>
+                                @Html.LabelFor(x => x.Password, "Hasło", new { @class = "form -label text-black-50" })
+                                @Html.PasswordFor(x => x.Password, new { @class = "form-control shadow-none" })
+                            </div>
+                            <div>
+                                @Html.CheckBoxFor(x => x.RemeberMe, new { @class = "form-check-input shadow-none" })
+                                @Html.LabelFor(x => x.RemeberMe, "Zapamiętaj mnie", new { @class = "form-check-label text-black-50" })
+                            </div>
+                            <div>
+                                @Html.Hidden("ReturnUrl", (string)ViewBag.ReturnUrl)
+                            </div>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary">Zaloguj</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section StyleSheet{
+    <style>
+        /* Navbar color */
+        .navbar {
+            background: rgba(0, 0, 0, 0) !important;
+        }
+
+        /* Change navbar color depending on resolution */
+        @@media (max-width: 992px) {
+            .navbar {
+                background: -moz-linear-gradient(45deg, rgba(205, 83, 120, 1), rgba(100, 83, 202, 1) 100%);
+                background: -webkit-linear-gradient(45deg, rgba(205, 83, 120, 1), rgba(100, 83, 202, 1) 100%);
+                background: linear-gradient(45deg, rgba(205, 83, 120, 1), rgba(100, 83, 202, 1) 100%);
+            }
+        }
+
+        /* Change navbar color on scroll */
+        .navbar.scrolled {
+            background: -moz-linear-gradient(45deg, rgba(205, 83, 120, 1), rgba(116, 82, 187, 1) 100%) !important;
+            background: -webkit-linear-gradient(45deg, rgba(205, 83, 120, 1), rgba(116, 82, 187, 1) 100%) !important;
+            background: linear-gradient(45deg, rgba(205, 83, 120, 1), rgba(116, 82, 187, 1) 100%) !important;
+        }
+    </style>
+}

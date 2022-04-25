@@ -1,0 +1,91 @@
+﻿@model TicketSystemWebApp.Models.TicketNewViewModel
+
+<div id="ticketAdd" class="container mt-content border bg-light rounded-3 mb-9">
+    <div class="row text-black-50 text-uppercase text-center">
+        <div class="col-12 mt-3">
+            <div class="border-bottom">
+                <span class="h5">Dodaj nowe zgłoszenie</span>
+            </div>
+        </div>
+    </div>
+
+    @using (Html.BeginForm("ticketnew", "tickets", FormMethod.Post, new { @id = "formTicketNew" }))
+    {
+        <div class="col-12 col-md-4 mt-4 form-group">
+            @Html.Label("UserName", "Twoja nazwa użytkownika", new { @class = "form-label text-black-50" })
+            @Html.TextBox("UserName", (string)ViewBag.UserName, new { @readonly = "readonly", @class = "form-control shadow-none" })
+        </div>
+        <div class="col-12 col-md-4 mt-4 form-group">
+            @Html.Label("UserEmail", "Twój adres e-mail", new { @class = "form-label text-black-50" })
+            @Html.TextBox("UserEmail", (string)ViewBag.UserEmail, new { @readonly = "readonly", @class = "form-control shadow-none" })
+        </div>
+        <div class="col-12 mt-4 form-group">
+            @Html.LabelFor(x => x.Title, "Temat", new { @class = "form-label text-black-50" })
+            @Html.TextBoxFor(x => x.Title, null, new { @maxlength = "75", @class = "form-control shadow-none" })
+            <span class="text-danger">To pole jest wymagane</span>
+        </div>
+        <div class="col-12 mt-4 form-group">
+            @Html.LabelFor(x => x.Information, "Opis", new { @class = "form-label text-black-50" })
+            @Html.TextAreaFor(x => x.Information, new { @rows = "4", @class = "form-control shadow-none" })
+            <span class="text-danger">To pole jest wymagane</span>
+        </div>
+        <div class="col-12 col-md-4 mt-4 form-group">
+            @Html.LabelFor(x => x.CategoryID, "Rodzaj zgłoszenia", new { @class = "form-label text-black-50" })
+            @Html.DropDownListFor(x => x.CategoryID, ViewBag.Categories as IEnumerable<SelectListItem>, "-- Wybierz rodzaj zgłoszenia --", new { @class = "form-select shadow-none" })
+            <span class="text-danger">To pole jest wymagane</span>
+        </div>
+        <div class="text-end my-4">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save me-1"></i>
+                Zapisz zgłoszenie
+            </button>
+            <a href="@Url.Action("index", "tickets")" role="button" class="btn btn-primary">
+                <i class="fas fa-list me-1"></i>
+                Powrót do listy
+            </a>
+        </div>
+    }
+</div>
+
+@section Scripts{
+    <!-- Bootstrap Maxlength js -->
+    <script src="~/lib/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+
+    <!-- TinyMCE  js -->
+    <script src="~/lib/tinymce/tinymce.min.js"></script>
+
+    <!-- Validation Custom  js -->
+    <script src="~/js/validationCustom.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            /* TinyMCE script */
+            tinymce.init({
+                selector: '#formTicketNew #Information',
+                language: "pl",
+                menubar: false,
+                plugins: "link advlist lists preview contextmenu",
+                toolbar: 'undo redo | forecolor backcolor | bold italic underline strikethrough | fontsizeselect | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist | link | preview',
+                setup: function (editor) {
+                    editor.on('keyup', function () {
+                        tinymce.triggerSave();
+
+                        var field = document.querySelector(editor.settings.selector);
+                        validationField(field);
+                    });
+                }
+            });
+
+            /* Bootstrap Maxlength script */
+            $('#Title').maxlength({
+                alwaysShow: true,
+                warningClass: 'badge bg-success',
+                limitReachedClass: 'badge bg-danger',
+                placement: 'top-right-inside'
+            });
+
+            /* Validation Custom */
+            validationCustom(['#formTicketNew #Title', '#formTicketNew #Information', '#formTicketNew #CategoryID'], '#formTicketNew button[type="submit"]');
+        });
+    </script>
+}
