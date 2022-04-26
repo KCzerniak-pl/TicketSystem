@@ -15,5 +15,8 @@ namespace TicketSystemWebApi.Models
 
         [Required]
         public bool CanAccepted { get; set; }
+
+        [Required]
+        public bool Technician { get; set; }
     }
 }

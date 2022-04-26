@@ -21,6 +21,9 @@ namespace Database.Entities
         [Required]
         public bool CanAccepted { get; set; } = default!;
 
+        [Required]
+        public bool Technician { get; set; } = default!;
+
         // Relationships one-to-many.
         public ICollection<User> Users { get; set; } = default!;
     }

@@ -19,7 +19,8 @@ namespace TicketSystemWebApi.Mapping
                 RoleID = user.Role.RoleID,
                 RoleName = user.Role.RoleName,
                 ShowAll = user.Role.ShowAll,
-                CanAccepted = user.Role.CanAccepted
+                CanAccepted = user.Role.CanAccepted,
+                Technician = user.Role.Technician
             };
 
             return returnValue;
@@ -33,6 +34,7 @@ namespace TicketSystemWebApi.Mapping
             returnValue.RoleID = role.RoleID;
             returnValue.RoleName = role.RoleName;
             returnValue.CanAccepted = role.CanAccepted;
+            returnValue.Technician = role.Technician;
 
             return returnValue;
         }

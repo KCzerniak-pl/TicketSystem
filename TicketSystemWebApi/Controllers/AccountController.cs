@@ -58,7 +58,7 @@ namespace TicketSystemWebApi.Controllers
             {
                 try
                 {
-                    // Retrieving data from database about all ticket of the selected user and remapping to DTO.
+                    // Retrieving data from database about selected user and remapping to DTO.
                     GetUsersDto user = await _usersDbContext.Users.Where(p => p.UserID == userID).Include(p => p.Role).Select(p => AccountMapping.GetUsersToDto(p)).FirstAsync();
 
                     return StatusCode(StatusCodes.Status200OK, user);
@@ -67,6 +67,26 @@ namespace TicketSystemWebApi.Controllers
                 {
                     return StatusCode(StatusCodes.Status404NotFound);
                 }
+            }
+
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        //GET: api/<ValuesController/Technicians
+        [HttpGet("Technicians")]
+        public async Task<ActionResult<IEnumerable<GetUsersDto>>> GetTechniciansData()
+        {
+            if (_usersDbContext.Database.CanConnect())
+            {
+                // Retrieving data from database about all technicians and remapping to DTO.
+                IEnumerable<GetUsersDto> users = await _usersDbContext.Users.Where(p => p.Role.Technician == true).Include(p => p.Role).Select(p => AccountMapping.GetUsersToDto(p)).ToArrayAsync();
+
+                if (users.Any())
+                {
+                    return StatusCode(StatusCodes.Status200OK, users);
+                }
+
+                return StatusCode(StatusCodes.Status404NotFound);
             }
 
             return StatusCode(StatusCodes.Status500InternalServerError);

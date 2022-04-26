@@ -167,6 +167,9 @@ namespace Database.Migrations.TicketsMigrations
                     b.Property<bool>("ShowAll")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("Technician")
+                        .HasColumnType("bit");
+
                     b.HasKey("RoleID");
 
                     b.ToTable("UserRoles");

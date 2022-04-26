@@ -40,7 +40,8 @@ namespace Database.Migrations.TicketsMigrations
                     RoleID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RoleName = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     ShowAll = table.Column<bool>(type: "bit", nullable: false),
-                    CanAccepted = table.Column<bool>(type: "bit", nullable: false)
+                    CanAccepted = table.Column<bool>(type: "bit", nullable: false),
+                    Technician = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

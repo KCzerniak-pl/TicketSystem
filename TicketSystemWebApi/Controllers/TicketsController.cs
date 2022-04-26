@@ -27,21 +27,21 @@ namespace TicketSystemWebApi.Controllers
         {
             if (_ticketsDbContext.Database.CanConnect())
             {
-                IEnumerable<GetTicketsDto> result;
+                IEnumerable<GetTicketsDto> users;
                 if (userID == default)
                 {
                     // Retrieving data from database about all ticket and remapping to DTO.
-                    result = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeCreated).Skip(skip).Take(take).Include(p => p.User).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
+                    users = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeCreated).Skip(skip).Take(take).Include(p => p.User).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
                 }
                 else
                 {
                     // Retrieving data from database about all ticket for user and remapping to DTO.
-                    result = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeCreated).Where(p => p.UserID == userID).Skip(skip).Take(take).Include(p => p.User).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
+                    users = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeCreated).Where(p => p.UserID == userID).Skip(skip).Take(take).Include(p => p.User).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
                 }
 
-                if (result.Any())
+                if (users.Any())
                 {
-                    return StatusCode(StatusCodes.Status200OK, result);
+                    return StatusCode(StatusCodes.Status200OK, users);
                 }
 
                 return StatusCode(StatusCodes.Status404NotFound);
@@ -56,19 +56,19 @@ namespace TicketSystemWebApi.Controllers
         {
             if (_ticketsDbContext.Database.CanConnect())
             {
-                int result = 0;
+                int tickets = 0;
                 if (userID == default)
                 {
                     // Count all ticket in database.
-                    result = await _ticketsDbContext.Tickets.CountAsync();
+                    tickets = await _ticketsDbContext.Tickets.CountAsync();
                 }
                 else
                 {
                     // Count selected ticket in database.
-                    result = await _ticketsDbContext.Tickets.Where(p => p.UserID == userID).CountAsync();
+                    tickets = await _ticketsDbContext.Tickets.Where(p => p.UserID == userID).CountAsync();
                 }
 
-                return StatusCode(StatusCodes.Status200OK, result);
+                return StatusCode(StatusCodes.Status200OK, tickets);
             }
 
             return StatusCode(StatusCodes.Status500InternalServerError);

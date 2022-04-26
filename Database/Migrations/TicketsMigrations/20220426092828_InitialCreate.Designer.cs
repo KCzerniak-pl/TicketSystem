@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations.TicketsMigrations
 {
     [DbContext(typeof(TicketsDbContext))]
-    [Migration("20220423210114_InitialCreate")]
+    [Migration("20220426092828_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -167,6 +167,9 @@ namespace Database.Migrations.TicketsMigrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("ShowAll")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Technician")
                         .HasColumnType("bit");
 
                     b.HasKey("RoleID");
