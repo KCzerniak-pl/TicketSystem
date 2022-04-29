@@ -25,7 +25,7 @@ namespace TicketSystemWebApi.Mapping
 
             returnValue.MessageID = Guid.NewGuid();
             returnValue.TicketID = message.TicketID;
-            returnValue.UserID = message.UserID;
+            returnValue.OwnerID = message.UserID;
             returnValue.Information = message.Information;
             returnValue.DateTimeCreated = DateTime.Now;
 

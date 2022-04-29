@@ -16,7 +16,7 @@ namespace Database.Entities
 
         [Column(TypeName = "uniqueidentifier")]
         [Required]
-        public Guid UserID { get; set; } = default!;
+        public Guid OwnerID { get; set; } = default!;
 
         [Column(TypeName = "nvarchar(max)")]
         [Required]

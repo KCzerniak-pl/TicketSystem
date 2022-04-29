@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations.TicketsMigrations
 {
     [DbContext(typeof(TicketsDbContext))]
-    [Migration("20220426092828_InitialCreate")]
+    [Migration("20220429160210_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,9 @@ namespace Database.Migrations.TicketsMigrations
                     b.Property<string>("Information")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OwnerID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TicketID")
                         .HasColumnType("uniqueidentifier");
@@ -97,23 +100,28 @@ namespace Database.Migrations.TicketsMigrations
                     b.Property<DateTimeOffset>("DateTimeModified")
                         .HasColumnType("datetimeoffset(0)");
 
+                    b.Property<Guid>("OwnerID")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("StatusID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("TechnicianID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(75)");
 
-                    b.Property<Guid>("UserID")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("TicketID");
 
                     b.HasIndex("CategoryID");
 
+                    b.HasIndex("OwnerID");
+
                     b.HasIndex("StatusID");
 
-                    b.HasIndex("UserID");
+                    b.HasIndex("TechnicianID");
 
                     b.ToTable("Tickets");
                 });
@@ -182,13 +190,13 @@ namespace Database.Migrations.TicketsMigrations
                     b.HasOne("Database.Entities.Ticket", "Ticket")
                         .WithMany("Messages")
                         .HasForeignKey("TicketID")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Database.Entities.User", "User")
                         .WithMany("Messages")
                         .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Ticket");
@@ -204,23 +212,29 @@ namespace Database.Migrations.TicketsMigrations
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
+                    b.HasOne("Database.Entities.User", "OwnerUser")
+                        .WithMany("OwnerTickets")
+                        .HasForeignKey("OwnerID")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
                     b.HasOne("Database.Entities.Status", "Status")
                         .WithMany("Tickets")
                         .HasForeignKey("StatusID")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("Database.Entities.User", "User")
-                        .WithMany("Tickets")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
+                    b.HasOne("Database.Entities.User", "TechnicianUser")
+                        .WithMany("TechnicianTickets")
+                        .HasForeignKey("TechnicianID");
 
                     b.Navigation("Category");
 
+                    b.Navigation("OwnerUser");
+
                     b.Navigation("Status");
 
-                    b.Navigation("User");
+                    b.Navigation("TechnicianUser");
                 });
 
             modelBuilder.Entity("Database.Entities.User", b =>
@@ -228,7 +242,7 @@ namespace Database.Migrations.TicketsMigrations
                     b.HasOne("Database.Entities.UserRole", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleID")
-                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Role");
@@ -253,7 +267,9 @@ namespace Database.Migrations.TicketsMigrations
                 {
                     b.Navigation("Messages");
 
-                    b.Navigation("Tickets");
+                    b.Navigation("OwnerTickets");
+
+                    b.Navigation("TechnicianTickets");
                 });
 
             modelBuilder.Entity("Database.Entities.UserRole", b =>

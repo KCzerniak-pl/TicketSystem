@@ -16,23 +16,17 @@ namespace Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Message>()
-                .HasOne(p => p.User)
-                .WithMany(b => b.Messages)
-                .HasForeignKey(s => s.UserID)
+            modelBuilder.Entity<Ticket>()
+                .HasOne(p => p.OwnerUser)
+                .WithMany(b => b.OwnerTickets)
+                .HasForeignKey(s => s.OwnerID)
                 .OnDelete(DeleteBehavior.ClientCascade);
 
             modelBuilder.Entity<Ticket>()
-                .HasOne(p => p.User)
-                .WithMany(b => b.Tickets)
-                .HasForeignKey(s => s.UserID)
-                .OnDelete(DeleteBehavior.ClientCascade);
-
-            modelBuilder.Entity<Message>()
-                .HasOne(p => p.Ticket)
-                .WithMany(b => b.Messages)
-                .HasForeignKey(s => s.TicketID)
-                .OnDelete(DeleteBehavior.ClientCascade);
+                .HasOne(p => p.TechnicianUser)
+                .WithMany(b => b.TechnicianTickets)
+                .HasForeignKey(s => s.TechnicianID)
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             modelBuilder.Entity<Ticket>()
                 .HasOne(p => p.Status)
@@ -46,11 +40,6 @@ namespace Database
                 .HasForeignKey(s => s.CategoryID)
                 .OnDelete(DeleteBehavior.ClientCascade);
 
-            modelBuilder.Entity<User>()
-                .HasOne(p => p.Role)
-                .WithMany(b => b.Users)
-                .HasForeignKey(s => s.RoleID)
-                .OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 }

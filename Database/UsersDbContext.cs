@@ -13,5 +13,14 @@ namespace Database
         // Properties DbSet for entity that is mapped on database table and view.
         // DbSet represents the entity set which can use for create, read, update and delete data in database.
         public virtual DbSet<User> Users { get; set; } = default!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>()
+                .HasOne(p => p.Role)
+                .WithMany(b => b.Users)
+                .HasForeignKey(s => s.RoleID)
+                .OnDelete(DeleteBehavior.ClientCascade);
+        }
     }
 }

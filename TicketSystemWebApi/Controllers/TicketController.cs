@@ -33,7 +33,7 @@ namespace TicketSystemWebApi.Controllers
                 try
                 {
                     // Retrieving data from database about selected ticket and remapping to DTO.
-                    GetTicketDto ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == ticketID).Include(p => p.User).Include(p => p.Category).Include(p => p.Status).Include(p => p.Messages).ThenInclude(p => p.User).Select(p => TicketMapping.GetTicketToDto(p)).FirstAsync();
+                    GetTicketDto ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == ticketID).Include(p => p.OwnerUser).Include(p => p.Category).Include(p => p.Status).Include(p => p.Messages).ThenInclude(p => p.User).Select(p => TicketMapping.GetTicketToDto(p)).FirstAsync();
 
                     // Retrieving data from database about selected user.
                     Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == userID).Include(p => p.Role).FirstAsync();
@@ -103,13 +103,13 @@ namespace TicketSystemWebApi.Controllers
                     try
                     {
                         // Retrieving data from database about selected ticket.
-                        Database.Entities.Ticket ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == putTicket.TicketID).Include(p => p.User).FirstAsync();
+                        Database.Entities.Ticket ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == putTicket.TicketID).Include(p => p.OwnerUser).FirstAsync();
 
                         // Retrieving data from database about selected user.
                         Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == putTicket.UserID).Include(p => p.Role).FirstAsync();
 
                         // Verification that user can update ticket (must be its author or have permission to view all tickets).
-                        if (ticket.UserID == putTicket.UserID || user.Role.ShowAll == true)
+                        if (ticket.OwnerID == putTicket.UserID || user.Role.ShowAll == true)
                         {
                             // Update data in database about selected ticket.
                             _ = TicketMapping.PutTicketStatusFromDto(ticket, putTicket);
@@ -151,7 +151,7 @@ namespace TicketSystemWebApi.Controllers
                         Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == putTicket.UserID).Include(p => p.Role).FirstAsync();
 
                         // Verification that user can update ticket (must be its author or have permission to view all tickets).
-                        if (ticket.UserID == putTicket.UserID || user.Role.ShowAll == true)
+                        if (ticket.OwnerID == putTicket.UserID || user.Role.ShowAll == true)
                         {
                             // Update data in database about selected ticket.
                             _ = TicketMapping.PutTicketTitleFromDto(ticket, putTicket);
@@ -193,7 +193,7 @@ namespace TicketSystemWebApi.Controllers
                         Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == putTicket.UserID).Include(p => p.Role).FirstAsync();
 
                         // Verification that user can update ticket (must be its author or have permission to view all tickets).
-                        if (ticket.UserID == putTicket.UserID || user.Role.ShowAll == true)
+                        if (ticket.OwnerID == putTicket.UserID || user.Role.ShowAll == true)
                         {
                             // Update data in database about selected ticket.
                             _ = TicketMapping.PutTicketCategoryFromDto(ticket, putTicket);
@@ -233,7 +233,7 @@ namespace TicketSystemWebApi.Controllers
                     Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == deleteTicket.UserID).Include(p => p.Role).FirstAsync();
 
                     // Verification that user can delete ticket (must be its author or have permission to view all tickets).
-                    if (ticket.UserID == deleteTicket.UserID || user.Role.ShowAll == true)
+                    if (ticket.OwnerID == deleteTicket.UserID || user.Role.ShowAll == true)
                     {
                         // Remove data id database about selected ticket.
                         _ = _ticketsDbContext.Tickets.Remove(ticket);

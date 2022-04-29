@@ -31,12 +31,12 @@ namespace TicketSystemWebApi.Controllers
                 if (userID == default)
                 {
                     // Retrieving data from database about all ticket and remapping to DTO.
-                    users = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeCreated).Skip(skip).Take(take).Include(p => p.User).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
+                    users = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeCreated).Skip(skip).Take(take).Include(p => p.OwnerUser).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
                 }
                 else
                 {
                     // Retrieving data from database about all ticket for user and remapping to DTO.
-                    users = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeCreated).Where(p => p.UserID == userID).Skip(skip).Take(take).Include(p => p.User).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
+                    users = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeCreated).Where(p => p.OwnerID == userID).Skip(skip).Take(take).Include(p => p.OwnerUser).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
                 }
 
                 if (users.Any())
@@ -65,7 +65,7 @@ namespace TicketSystemWebApi.Controllers
                 else
                 {
                     // Count selected ticket in database.
-                    tickets = await _ticketsDbContext.Tickets.Where(p => p.UserID == userID).CountAsync();
+                    tickets = await _ticketsDbContext.Tickets.Where(p => p.OwnerID == userID).CountAsync();
                 }
 
                 return StatusCode(StatusCodes.Status200OK, tickets);

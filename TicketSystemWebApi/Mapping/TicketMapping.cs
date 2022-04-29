@@ -18,9 +18,9 @@ namespace TicketSystemWebApi.Mapping
             returnValue.DateTimeCreated = ticket.DateTimeCreated;
             returnValue.DateTimeModified = ticket.DateTimeModified;
             returnValue.Title = ticket.Title;
-            returnValue.UserID = ticket.User.UserID;
-            returnValue.UserName = String.Format("{0} {1}", ticket.User.FirstName, ticket.User.LastName);
-            returnValue.Email = ticket.User.Email;
+            returnValue.UserID = ticket.OwnerUser.UserID;
+            returnValue.UserName = String.Format("{0} {1}", ticket.OwnerUser.FirstName, ticket.OwnerUser.LastName);
+            returnValue.Email = ticket.OwnerUser.Email;
 
             List<GetMessagesDto> messages = new List<GetMessagesDto>();
             messages.AddRange(ticket.Messages.Where(p => p.TicketID == ticket.TicketID).Select(p => MessageMapping.GetMessageToDto(p)).OrderBy(p => p.DateTimeCreated));
@@ -41,8 +41,8 @@ namespace TicketSystemWebApi.Mapping
             returnValue.DateTimeCreated = ticket.DateTimeCreated;
             returnValue.DateTimeModified = ticket.DateTimeModified;
             returnValue.Title = ticket.Title;
-            returnValue.UserID = ticket.UserID;
-            returnValue.UserName = String.Format("{0} {1}", ticket.User.FirstName, ticket.User.LastName);
+            returnValue.UserID = ticket.OwnerID;
+            returnValue.UserName = String.Format("{0} {1}", ticket.OwnerUser.FirstName, ticket.OwnerUser.LastName);
 
             return returnValue;
         }
@@ -53,7 +53,7 @@ namespace TicketSystemWebApi.Mapping
             Database.Entities.Ticket returnValue = new Database.Entities.Ticket();
 
             returnValue.TicketID = Guid.NewGuid();
-            returnValue.UserID = ticket.UserID;
+            returnValue.OwnerID = ticket.UserID;
             returnValue.StatusID = statusForNewTicket;
             returnValue.CategoryID = ticket.CategoryID;
             returnValue.DateTimeCreated = DateTime.Now;
@@ -64,7 +64,7 @@ namespace TicketSystemWebApi.Mapping
             {
                 MessageID = Guid.NewGuid(),
                 TicketID = returnValue.TicketID,
-                UserID = ticket.UserID,
+                OwnerID = ticket.UserID,
                 Information = ticket.Information,
                 DateTimeCreated = returnValue.DateTimeCreated
             };

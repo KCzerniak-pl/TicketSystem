@@ -67,7 +67,8 @@ namespace Database.Migrations.TicketsMigrations
                         name: "FK_Users_UserRoles_RoleID",
                         column: x => x.RoleID,
                         principalTable: "UserRoles",
-                        principalColumn: "RoleID");
+                        principalColumn: "RoleID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -75,7 +76,8 @@ namespace Database.Migrations.TicketsMigrations
                 columns: table => new
                 {
                     TicketID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OwnerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TechnicianID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     StatusID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CategoryID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DateTimeCreated = table.Column<DateTimeOffset>(type: "datetimeoffset(0)", nullable: false),
@@ -96,8 +98,13 @@ namespace Database.Migrations.TicketsMigrations
                         principalTable: "Statuses",
                         principalColumn: "StatusID");
                     table.ForeignKey(
-                        name: "FK_Tickets_Users_UserID",
-                        column: x => x.UserID,
+                        name: "FK_Tickets_Users_OwnerID",
+                        column: x => x.OwnerID,
+                        principalTable: "Users",
+                        principalColumn: "UserID");
+                    table.ForeignKey(
+                        name: "FK_Tickets_Users_TechnicianID",
+                        column: x => x.TechnicianID,
                         principalTable: "Users",
                         principalColumn: "UserID");
                 });
@@ -108,9 +115,10 @@ namespace Database.Migrations.TicketsMigrations
                 {
                     MessageID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TicketID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OwnerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Information = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateTimeCreated = table.Column<DateTimeOffset>(type: "datetimeoffset(0)", nullable: false)
+                    DateTimeCreated = table.Column<DateTimeOffset>(type: "datetimeoffset(0)", nullable: false),
+                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -119,12 +127,14 @@ namespace Database.Migrations.TicketsMigrations
                         name: "FK_Messages_Tickets_TicketID",
                         column: x => x.TicketID,
                         principalTable: "Tickets",
-                        principalColumn: "TicketID");
+                        principalColumn: "TicketID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Messages_Users_UserID",
                         column: x => x.UserID,
                         principalTable: "Users",
-                        principalColumn: "UserID");
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -143,14 +153,19 @@ namespace Database.Migrations.TicketsMigrations
                 column: "CategoryID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Tickets_OwnerID",
+                table: "Tickets",
+                column: "OwnerID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tickets_StatusID",
                 table: "Tickets",
                 column: "StatusID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_UserID",
+                name: "IX_Tickets_TechnicianID",
                 table: "Tickets",
-                column: "UserID");
+                column: "TechnicianID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_RoleID",
