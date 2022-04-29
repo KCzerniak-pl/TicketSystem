@@ -9,68 +9,69 @@ namespace TicketSystemWebApi.Helpers
     {
         internal static void DatabaseInitializeData(IApplicationBuilder app, WebApplicationBuilder builder)
         {
-            using (var serviceScope = app.ApplicationServices.CreateScope())
+            bool initialize = bool.Parse(builder.Configuration.GetSection("DatabaseInitialize:Initialize").Value);
+            if (initialize)
             {
-                var ticketSystemDbContext = serviceScope.ServiceProvider.GetService<Database.TicketsDbContext>();
-                var statuesDbContext = serviceScope.ServiceProvider.GetService<Database.StatusesDbContext>();
-                var usersDbContext = serviceScope.ServiceProvider.GetService<Database.UsersDbContext>();
-
-                // Check the database is connectable.
-                if (ticketSystemDbContext?.GetService<IRelationalDatabaseCreator>().Exists() == false)
+                using (var serviceScope = app.ApplicationServices.CreateScope())
                 {
-                    // Database migration.
-                    ticketSystemDbContext.Database.Migrate();
+                    Database.TicketsDbContext ticketsDbContext = serviceScope.ServiceProvider.GetService<Database.TicketsDbContext>()!;
+                    Database.UsersDbContext usersDbContext = serviceScope.ServiceProvider.GetService<Database.UsersDbContext>()!;
+                    Database.StatusesDbContext statusesDbContext = serviceScope.ServiceProvider.GetService<Database.StatusesDbContext>()!;
 
-                    // Check the tables exists.
-                    if (statuesDbContext?.Database.GetService<IRelationalDatabaseCreator>().HasTables() == true)
+                    // Check the database is connectable.
+                    if (!ticketsDbContext.Database.CanConnect())
                     {
-                        // Options for json serializer.
-                        JsonSerializerOptions options = new JsonSerializerOptions { WriteIndented = true };
+                        // Database migration.
+                        ticketsDbContext.Database.Migrate();
 
-                        // Add initialize data for "Statuses" table.
-                        IEnumerable<string> names = builder.Configuration.GetSection("DatabaseInitialize:Statuses").AsEnumerable().Where(p => p.Value != null).Select(p => p.Value).Reverse();
-                        foreach (string name in names)
+                        // Check the table exists.
+                        if (!statusesDbContext.Statuses.Any())
                         {
-                            statuesDbContext.Statuses.Add(
-                                new Database.Entities.Status
-                                {
-                                    StatusID = new Guid(),
-                                    Name = name
-                                }
-                            );
+                            // Add initialize data for "Statuses" table.
+                            IEnumerable<string> names = builder.Configuration.GetSection("DatabaseInitialize:Statuses").AsEnumerable().Where(p => p.Value != null).Select(p => p.Value).Reverse();
+                            foreach (string name in names)
+                            {
+                                statusesDbContext.Statuses.Add(
+                                    new Database.Entities.Status
+                                    {
+                                        StatusID = new Guid(),
+                                        Name = name
+                                    }
+                                );
+                            }
+
+                            statusesDbContext.SaveChanges();
                         }
 
-                        statuesDbContext.SaveChanges();
-                    }
-
-                    // Check the tables exists.
-                    if (usersDbContext?.Database.GetService<IRelationalDatabaseCreator>().HasTables() == true)
-                    {
-                        // Add initialize data for "Users" and "UserRoles" tables.
-                        IEnumerable<string> user = builder.Configuration.GetSection("DatabaseInitialize:User").AsEnumerable().Where(p => p.Value != null).Select(p => p.Value).Reverse();
-                        Guid roleID = new Guid();
-                        usersDbContext.Users.Add(
-                            new Database.Entities.User
-                            {
-                                UserID = new Guid(),
-                                Email = user.ElementAt(0),
-                                FirstName = "Admin",
-                                LastName = "Admin",
-                                PasswordHash = user.ElementAt(1),
-                                DateTimeCreated = DateTime.Now,
-                                RoleID = roleID,
-                                Role = new Database.Entities.UserRole
+                        // Check the table exists.
+                        if (!usersDbContext.Users.Any())
+                        {
+                            // Add initialize data for "Users" and "UserRoles" tables.
+                            IEnumerable<string> user = builder.Configuration.GetSection("DatabaseInitialize:User").AsEnumerable().Where(p => p.Value != null).Select(p => p.Value).Reverse();
+                            Guid roleID = new Guid();
+                            usersDbContext.Users.Add(
+                                new Database.Entities.User
                                 {
+                                    UserID = new Guid(),
+                                    Email = user.ElementAt(0),
+                                    FirstName = "Admin",
+                                    LastName = "Admin",
+                                    PasswordHash = user.ElementAt(1),
+                                    DateTimeCreated = DateTime.Now,
                                     RoleID = roleID,
-                                    RoleName = "Admin",
-                                    CanAccepted = true,
-                                    ShowAll = true,
-                                    Technician = false
+                                    Role = new Database.Entities.UserRole
+                                    {
+                                        RoleID = roleID,
+                                        RoleName = "Admin",
+                                        CanAccepted = true,
+                                        ShowAll = true,
+                                        Technician = false
+                                    }
                                 }
-                            }
-                        );
+                            );
 
-                        usersDbContext.SaveChanges();
+                            usersDbContext.SaveChanges();
+                        }
                     }
                 }
             }

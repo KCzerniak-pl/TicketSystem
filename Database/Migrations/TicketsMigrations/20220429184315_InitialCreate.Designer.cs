@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations.TicketsMigrations
 {
     [DbContext(typeof(TicketsDbContext))]
-    [Migration("20220429160210_InitialCreate")]
+    [Migration("20220429184315_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

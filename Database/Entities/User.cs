@@ -36,10 +36,13 @@ namespace Database.Entities
         public DateTimeOffset DateTimeCreated { get; set; } = default!;
 
         // Relationships one-to-many.
-
         public UserRole Role { get; set; } = default!;
         public ICollection<Message> Messages { get; set; } = default!;
+
+        [InverseProperty("OwnerUser")]
         public virtual ICollection<Ticket> OwnerTickets { get; set; } = default!;
+
+        [InverseProperty("TechnicianUser")]
         public virtual ICollection<Ticket> TechnicianTickets { get; set; } = default!;
     }
 }
