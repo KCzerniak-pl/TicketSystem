@@ -16,7 +16,7 @@ namespace Database.Entities
         public Guid OwnerID { get; set; } = default!;
 
         [Column(TypeName = "uniqueidentifier")]
-        public Guid? TechnicianID { get; set; }
+        public System.Nullable<Guid> TechnicianID { get; set; }
 
         [Column(TypeName = "uniqueidentifier")]
         [Required]
@@ -39,8 +39,8 @@ namespace Database.Entities
         public string Title { get; set; } = default!;
 
         // Relationships one-to-many.
-        public User OwnerUser { get; set; } = default!;
-        public User TechnicianUser { get; set; } = default!;
+        public User Owner { get; set; } = default!;
+        public User Technician { get; set; } = default!;
         public Status Status { get; set; } = default!;
         public Category Category { get; set; } = default!;
         public ICollection<Message> Messages { get; set; } = default!;

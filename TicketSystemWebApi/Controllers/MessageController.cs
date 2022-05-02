@@ -35,7 +35,7 @@ namespace TicketSystemWebApi.Controllers
                     try
                     {
                         // Retrieving data from database about selected ticket.
-                        Database.Entities.Ticket ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == postMessage.TicketID).Include(p => p.OwnerUser).FirstAsync();
+                        Database.Entities.Ticket ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == postMessage.TicketID).Include(p => p.Owner).FirstAsync();
 
                         // Retrieving data from database about selected user.
                         Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == postMessage.UserID).FirstAsync();
@@ -46,9 +46,6 @@ namespace TicketSystemWebApi.Controllers
                             // Add new massage for ticket.
                             _ = _messagesDbContext.Messages.Add(MessageMapping.PostMessageFromDto(postMessage));
                             _ = await _messagesDbContext.SaveChangesAsync();
-
-                            // Send e-mail.
-                            //Helpers.SendEmail.Send();
 
                             return StatusCode(StatusCodes.Status204NoContent);
                         }

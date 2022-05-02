@@ -33,7 +33,7 @@ namespace TicketSystemWebApi.Controllers
                 try
                 {
                     // Retrieving data from database about selected ticket and remapping to DTO.
-                    GetTicketDto ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == ticketID).Include(p => p.OwnerUser).Include(p => p.Category).Include(p => p.Status).Include(p => p.Messages).ThenInclude(p => p.User).Select(p => TicketMapping.GetTicketToDto(p)).FirstAsync();
+                    GetTicketDto ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == ticketID).Include(p => p.Owner).Include(p => p.Category).Include(p => p.Status).Include(p => p.Messages).ThenInclude(p => p.Owner).Select(p => TicketMapping.GetTicketToDto(p)).FirstAsync();
 
                     // Retrieving data from database about selected user.
                     Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == userID).Include(p => p.Role).FirstAsync();
@@ -67,9 +67,6 @@ namespace TicketSystemWebApi.Controllers
                 {
                     try
                     {
-                        // Retrieving data from database about user who add new ticket.
-                        Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == postTicket.UserID).FirstAsync();
-
                         // Retrieving data from database about status for a new ticket (first element).
                         Guid statusForNewTicket = await _statusesDbContext.Statuses.Select(p => p.StatusID).FirstAsync();
 
@@ -80,8 +77,9 @@ namespace TicketSystemWebApi.Controllers
 
                         return StatusCode(StatusCodes.Status204NoContent);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        var error = ex;
                         return StatusCode(StatusCodes.Status500InternalServerError);
                     }
                 }
@@ -103,7 +101,7 @@ namespace TicketSystemWebApi.Controllers
                     try
                     {
                         // Retrieving data from database about selected ticket.
-                        Database.Entities.Ticket ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == putTicket.TicketID).Include(p => p.OwnerUser).FirstAsync();
+                        Database.Entities.Ticket ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == putTicket.TicketID).Include(p => p.Owner).FirstAsync();
 
                         // Retrieving data from database about selected user.
                         Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == putTicket.UserID).Include(p => p.Role).FirstAsync();

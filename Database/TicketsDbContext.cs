@@ -17,15 +17,16 @@ namespace Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Ticket>()
-                .HasOne(p => p.OwnerUser)
+                .HasOne(p => p.Owner)
                 .WithMany(b => b.OwnerTickets)
                 .HasForeignKey(s => s.OwnerID)
                 .OnDelete(DeleteBehavior.ClientCascade);
 
             modelBuilder.Entity<Ticket>()
-                .HasOne(p => p.TechnicianUser)
+                .HasOne(p => p.Technician)
                 .WithMany(b => b.TechnicianTickets)
                 .HasForeignKey(s => s.TechnicianID)
+                .IsRequired(false)
                 .OnDelete(DeleteBehavior.ClientSetNull);
 
             modelBuilder.Entity<Ticket>()
@@ -39,7 +40,6 @@ namespace Database
                 .WithMany(b => b.Tickets)
                 .HasForeignKey(s => s.CategoryID)
                 .OnDelete(DeleteBehavior.ClientCascade);
-
         }
     }
 }

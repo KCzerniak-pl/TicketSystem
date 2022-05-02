@@ -17,7 +17,7 @@ namespace Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Message>()
-                .HasOne(p => p.User)
+                .HasOne(p => p.Owner)
                 .WithMany(b => b.Messages)
                 .HasForeignKey(s => s.OwnerID)
                 .OnDelete(DeleteBehavior.ClientCascade);

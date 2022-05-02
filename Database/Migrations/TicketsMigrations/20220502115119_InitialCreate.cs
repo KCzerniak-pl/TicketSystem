@@ -117,8 +117,7 @@ namespace Database.Migrations.TicketsMigrations
                     TicketID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OwnerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Information = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateTimeCreated = table.Column<DateTimeOffset>(type: "datetimeoffset(0)", nullable: false),
-                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    DateTimeCreated = table.Column<DateTimeOffset>(type: "datetimeoffset(0)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -130,22 +129,22 @@ namespace Database.Migrations.TicketsMigrations
                         principalColumn: "TicketID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Messages_Users_UserID",
-                        column: x => x.UserID,
+                        name: "FK_Messages_Users_OwnerID",
+                        column: x => x.OwnerID,
                         principalTable: "Users",
                         principalColumn: "UserID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Messages_OwnerID",
+                table: "Messages",
+                column: "OwnerID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Messages_TicketID",
                 table: "Messages",
                 column: "TicketID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Messages_UserID",
-                table: "Messages",
-                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_CategoryID",

@@ -12,8 +12,8 @@ namespace TicketSystemWebApi.Mapping
             returnValue.MessageID = message.MessageID;
             returnValue.Information = message.Information;
             returnValue.DateTimeCreated = message.DateTimeCreated;
-            returnValue.UserID = message.User.UserID;
-            returnValue.UserName = String.Format("{0} {1}", message.User.FirstName, message.User.LastName);
+            returnValue.UserID = message.Owner.UserID;
+            returnValue.UserName = String.Format("{0} {1}", message.Owner.FirstName, message.Owner.LastName);
 
             return returnValue;
         }

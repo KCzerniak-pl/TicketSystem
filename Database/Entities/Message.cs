@@ -28,6 +28,7 @@ namespace Database.Entities
 
         // Relationships one-to-many.
         public Ticket Ticket { get; set; } = default!;
-        public User User { get; set; } = default!;
+
+        public User Owner { get; set; } = default!;
     }
 }

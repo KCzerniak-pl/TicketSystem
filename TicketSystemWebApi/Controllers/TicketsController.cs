@@ -31,12 +31,12 @@ namespace TicketSystemWebApi.Controllers
                 if (userID == default)
                 {
                     // Retrieving data from database about all ticket and remapping to DTO.
-                    users = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeCreated).Skip(skip).Take(take).Include(p => p.OwnerUser).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
+                    users = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeCreated).Skip(skip).Take(take).Include(p => p.Owner).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
                 }
                 else
                 {
                     // Retrieving data from database about all ticket for user and remapping to DTO.
-                    users = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeCreated).Where(p => p.OwnerID == userID).Skip(skip).Take(take).Include(p => p.OwnerUser).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
+                    users = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeCreated).Where(p => p.OwnerID == userID).Skip(skip).Take(take).Include(p => p.Owner).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
                 }
 
                 if (users.Any())

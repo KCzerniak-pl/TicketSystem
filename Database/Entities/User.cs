@@ -39,10 +39,10 @@ namespace Database.Entities
         public UserRole Role { get; set; } = default!;
         public ICollection<Message> Messages { get; set; } = default!;
 
-        [InverseProperty("OwnerUser")]
+        [InverseProperty("Owner")]
         public virtual ICollection<Ticket> OwnerTickets { get; set; } = default!;
 
-        [InverseProperty("TechnicianUser")]
+        [InverseProperty("Technician")]
         public virtual ICollection<Ticket> TechnicianTickets { get; set; } = default!;
     }
 }

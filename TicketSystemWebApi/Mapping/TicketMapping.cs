@@ -18,9 +18,9 @@ namespace TicketSystemWebApi.Mapping
             returnValue.DateTimeCreated = ticket.DateTimeCreated;
             returnValue.DateTimeModified = ticket.DateTimeModified;
             returnValue.Title = ticket.Title;
-            returnValue.UserID = ticket.OwnerUser.UserID;
-            returnValue.UserName = String.Format("{0} {1}", ticket.OwnerUser.FirstName, ticket.OwnerUser.LastName);
-            returnValue.Email = ticket.OwnerUser.Email;
+            returnValue.UserID = ticket.Owner.UserID;
+            returnValue.UserName = String.Format("{0} {1}", ticket.Owner.FirstName, ticket.Owner.LastName);
+            returnValue.Email = ticket.Owner.Email;
 
             List<GetMessagesDto> messages = new List<GetMessagesDto>();
             messages.AddRange(ticket.Messages.Where(p => p.TicketID == ticket.TicketID).Select(p => MessageMapping.GetMessageToDto(p)).OrderBy(p => p.DateTimeCreated));
@@ -42,7 +42,7 @@ namespace TicketSystemWebApi.Mapping
             returnValue.DateTimeModified = ticket.DateTimeModified;
             returnValue.Title = ticket.Title;
             returnValue.UserID = ticket.OwnerID;
-            returnValue.UserName = String.Format("{0} {1}", ticket.OwnerUser.FirstName, ticket.OwnerUser.LastName);
+            returnValue.UserName = String.Format("{0} {1}", ticket.Owner.FirstName, ticket.Owner.LastName);
 
             return returnValue;
         }
