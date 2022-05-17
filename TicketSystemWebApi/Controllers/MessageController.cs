@@ -38,7 +38,7 @@ namespace TicketSystemWebApi.Controllers
                         Database.Entities.Ticket ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == postMessage.TicketID).Include(p => p.Owner).FirstAsync();
 
                         // Retrieving data from database about selected user.
-                        Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == postMessage.UserID).FirstAsync();
+                        Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == postMessage.UserID).Include(p => p.Role).FirstAsync();
 
                         // Verification that user can add new message for ticket (must be its author or have permission to view all tickets).
                         if (ticket.OwnerID == postMessage.UserID || user.Role.ShowAll == true)

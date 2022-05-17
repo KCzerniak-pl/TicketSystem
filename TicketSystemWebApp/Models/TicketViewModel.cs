@@ -25,5 +25,9 @@
         public string Email { get; set; } = default!;
 
         public List<MessagesViewModel> Messages { get; set; } = default!;
+
+        public Guid? TechnicianID { get; set; }
+
+        public string? TechnicianName { get; set; }
     }
 }

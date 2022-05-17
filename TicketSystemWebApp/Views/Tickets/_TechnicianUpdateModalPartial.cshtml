@@ -1,0 +1,26 @@
+﻿@model TicketSystemWebApp.Models.TicketViewModel
+<div id="technicianUpdateModal" tabindex="-1" aria-labelledby="technicianUpdateModalLabel" aria-hidden="true" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Html.BeginForm("technicianupdate", "tickets", FormMethod.Post))
+            {
+                <div class="modal-header">
+                    <h5 class="modal-title">Wybierz technika</h5>
+                    <button type="button" data-mdb-dismiss="modal" aria-label="Close" class="btn-close shadow-none"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        @Html.DropDownListFor(x => x.TechnicianID, ViewBag.Technicians as IEnumerable<SelectListItem>, new { @class = "form-select shadow-none" })
+                    </div>
+                    <div>
+                        @Html.Hidden("ticketID", Model.TicketID)
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-mdb-dismiss="modal" class="btn btn-danger">Anuluj</button>
+                    <button type="submit" class="btn btn-primary">Zapisz</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

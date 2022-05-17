@@ -25,6 +25,18 @@ namespace TicketSystemWebApp.Mapping
             return returnValue;
         }
 
+        // Mapping DTO to object used by the application - user.
+        internal static UserViewModel GetTechnicianFromDto(GetUsersDto dto)
+        {
+            UserViewModel returnValue = new UserViewModel();
+
+            returnValue.UserID = dto.UserID;
+            returnValue.FirstName = dto.FirstName;
+            returnValue.LastName = dto.LastName;
+
+            return returnValue;
+        }
+
         // Mapping DTO to object used by the application - user role.
         internal static RoleViewModel GetRoleFromDto(GetRoleDto message)
         {

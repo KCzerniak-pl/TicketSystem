@@ -36,5 +36,21 @@ namespace TicketSystemWebApp.Services
                 return AccountMapping.GetUserFromDto(user);
             }
         }
+
+        // Retrieving data about technicians.
+        public async Task<List<UserViewModel>> GetTechniciansAsync()
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                // API client.
+                TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
+
+                // Retrieving data about technicians (used service from TicketSystemWebApiClient).
+                IEnumerable<GetUsersDto> technicians = await apiClient.GetTechniciansAsync();
+
+                // Mapping DTO to object used by the application - technicians.
+                return technicians.Select(dto => AccountMapping.GetTechnicianFromDto(dto)).ToList();
+            }
+        }
     }
 }

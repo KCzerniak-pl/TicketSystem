@@ -21,6 +21,7 @@ namespace TicketSystemWebApp.Mapping
             returnValue.UserID = dto.UserID;
             returnValue.UserName = dto.UserName;
             returnValue.Email = dto.Email;
+            returnValue.TechnicianID = dto.TechnicianID;
 
             return returnValue;
         }
@@ -56,13 +57,14 @@ namespace TicketSystemWebApp.Mapping
         }
 
         // Mapping data to DTO - update status.
-        internal static PutTicketStatusDto PutTicketStatusToDto(TicketStatusUpdateViewModel ticket, Guid userID)
+        internal static PutTicketStatusDto PutTicketStatusToDto(TicketStatusUpdateViewModel ticket, Guid userID, Guid technicianID)
         {
             PutTicketStatusDto returnValue = new PutTicketStatusDto();
 
             returnValue.UserID = userID;
             returnValue.TicketID = ticket.TicketID;
             returnValue.StatusID = ticket.StatusID;
+            returnValue.TechnicianID = technicianID;
 
             return returnValue;
         }
@@ -87,6 +89,18 @@ namespace TicketSystemWebApp.Mapping
             returnValue.UserID = userID;
             returnValue.TicketID = ticket.TicketID;
             returnValue.CategoryID = ticket.CategoryID;
+
+            return returnValue;
+        }
+
+        // Mapping data to DTO - update technician.
+        internal static PutTicketTechnicianDto PutTicketTechnicianToDto(TicketTechnicianUpdateViewModel ticket, Guid userID)
+        {
+            PutTicketTechnicianDto returnValue = new PutTicketTechnicianDto();
+
+            returnValue.UserID = userID;
+            returnValue.TicketID = ticket.TicketID;
+            returnValue.TechnicianID = ticket.TechnicianID;
 
             return returnValue;
         }

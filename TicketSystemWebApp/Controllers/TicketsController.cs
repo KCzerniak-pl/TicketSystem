@@ -106,16 +106,34 @@ namespace TicketSystemWebApp.Controllers
             // Retrieving data about selected ticket.
             TicketViewModel ticket = await _ticketsService.GetTicketAsync(ticketID, userID);
 
-            // Data for drop down list with categories.
+            // Retrieving data about categories.
             List<CategoryViewModel> categories = await _ticketsService.GetCategoriesAsync();
-            List<SelectListItem> selectListItem = new List<SelectListItem>();
-            categories.ForEach(x => selectListItem.Add(new SelectListItem { Value = x.CategoryID.ToString(), Text = x.Name }));
+            // Data for drop down list with categories.
+            List<SelectListItem> selectListItemForCategories = new List<SelectListItem>();
+            categories.ForEach(x => selectListItemForCategories.Add(new SelectListItem { Value = x.CategoryID.ToString(), Text = x.Name }));
 
-            // Get statuses from "appsettings.json"
+            // Retrieving data about technicians.
+            List<UserViewModel> technicians = await _accountService.GetTechniciansAsync();
+            // Data for drop down list with technicians.
+            List<SelectListItem> selectListItemForTechnicians = new List<SelectListItem>();
+            technicians.ForEach(x => selectListItemForTechnicians.Add(new SelectListItem { Value = x.UserID.ToString(), Text = x.FirstName + " " + x.LastName }));
+
+            // Check if ticket has the selected technician.
+            if (ticket.TechnicianID is null && !user.Role.CanAccepted)
+            {
+                ticket.TechnicianName = "&nbsp";
+            }
+            else
+            {
+                ticket.TechnicianName = (ticket.TechnicianID is not null) ? technicians.Where(p => p.UserID == ticket.TechnicianID).Select(p => p.FirstName + " " + p.LastName).FirstOrDefault() : technicians.Select(p => p.FirstName + " " + p.LastName).FirstOrDefault();
+            }
+
+            // Get statuses from "appsettings.json".
             IEnumerable<string> statuses = _configuration.GetSection("Statuses:Guid").AsEnumerable().Where(p => p.Value != null).Select(p => p.Value).Reverse();
 
             ViewBag.CanAccepted = user.Role.CanAccepted;
-            ViewBag.Categories = selectListItem;
+            ViewBag.Categories = selectListItemForCategories;
+            ViewBag.Technicians = selectListItemForTechnicians;
             ViewBag.StatusNew = statuses.FirstOrDefault();
             ViewBag.StatusAccept = statuses.Skip(1).Take(1).FirstOrDefault();
             ViewBag.StatusDiscard = statuses.Skip(2).Take(1).FirstOrDefault();
@@ -173,7 +191,7 @@ namespace TicketSystemWebApp.Controllers
 
         [HttpPost]
         [TypeFilter(typeof(ValidateAntiForgeryTokenFailed))] // Filter executed in case of incorrect validation of the security token for form.
-        public async Task<IActionResult> StatusUpdate(TicketStatusUpdateViewModel ticket)
+        public async Task<IActionResult> StatusUpdate(TicketStatusUpdateViewModel ticket, Guid? technicianID)
         {
             // Check autorization for this site.
             if (!SessionHelper.CheckAuthorization(HttpContext))
@@ -186,8 +204,17 @@ namespace TicketSystemWebApp.Controllers
                 // Get userID from session.
                 Guid userID = SessionHelper.GetObjectFromJson<Guid>(HttpContext, "UserID");
 
+                if (technicianID is null)
+                {
+                    // Retrieving data about technicians.
+                    List<UserViewModel> technicians = await _accountService.GetTechniciansAsync();
+
+                    // First technician is default.
+                    technicianID = technicians.Select(p => p.UserID).FirstOrDefault();
+                }
+
                 // Update status for ticket (used service from TicketsService).
-                await _ticketsService.PutTicketStatusAsync(ticket, userID);
+                await _ticketsService.PutTicketStatusAsync(ticket, userID, technicianID ?? default);
             }
 
             return RedirectToAction(nameof(Index));
@@ -232,6 +259,28 @@ namespace TicketSystemWebApp.Controllers
 
                 // Update category for ticket (used service from TicketsService).
                 await _ticketsService.PutTicketCategoryAsync(ticket, userID);
+            }
+
+            return RedirectToAction(nameof(Edit), new { ticket.TicketID });
+        }
+
+        [HttpPost]
+        [TypeFilter(typeof(ValidateAntiForgeryTokenFailed))] // Filter executed in case of incorrect validation of the security token for form.
+        public async Task<IActionResult> TechnicianUpdate(TicketTechnicianUpdateViewModel ticket)
+        {
+            // Check autorization for this site.
+            if (!SessionHelper.CheckAuthorization(HttpContext))
+            {
+                return RedirectToAction(nameof(AccountController.Login), "Account");
+            }
+
+            if (ModelState.IsValid)
+            {
+                // Get userID from session.
+                Guid userID = SessionHelper.GetObjectFromJson<Guid>(HttpContext, "UserID");
+
+                // Update category for ticket (used service from TicketsService).
+                await _ticketsService.PutTicketTechnicianAsync(ticket, userID);
             }
 
             return RedirectToAction(nameof(Edit), new { ticket.TicketID });

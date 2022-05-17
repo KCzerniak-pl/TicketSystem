@@ -65,7 +65,7 @@ namespace TicketSystemWebApi.Helpers
                                         RoleName = "Admin",
                                         CanAccepted = true,
                                         ShowAll = true,
-                                        Technician = false
+                                        Technician = true
                                     }
                                 }
                             );

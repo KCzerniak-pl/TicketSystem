@@ -6,5 +6,6 @@ namespace TicketSystemWebApp.Services
     {
         Task<LoginResponseDto> LoginAsync(LoginViewModel user);
         Task<UserViewModel> GetUserDataAsync(Guid userID);
+        Task<List<UserViewModel>> GetTechniciansAsync();
     }
 }

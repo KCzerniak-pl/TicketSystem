@@ -73,11 +73,11 @@
                     <span class="mx-2">Przypisz technika</span>
                     @if (ViewBag.CanAccepted)
                     {
-                        <button type="button" data-mdb-toggle="modal" data-mdb-target="#agentUpdateModal" class="btn btn-info btn-sm" role="button"><i class="fas fa-edit"></i></button>
+                        <button type="button" data-mdb-toggle="modal" data-mdb-target="#technicianUpdateModal" class="btn btn-info btn-sm" role="button"><i class="fas fa-edit"></i></button>
                     }
                 </div>
                 <div class="my-2 px-2">
-                    Adam Jabłoński
+                    @Html.Raw(System.Web.HttpUtility.HtmlDecode(Model.TechnicianName))
                 </div>
             </div>
         </div>
@@ -92,6 +92,7 @@
                     @if (ViewBag.CanAccepted)
                     {
                         @Html.Hidden("ticketID", Model.TicketID)
+                        @Html.Hidden("technicianID", Model.TechnicianID)
 
                         if (Model.StatusID != new Guid(ViewBag.StatusAccept))
                         {
@@ -171,7 +172,7 @@
 
     @await Html.PartialAsync("_TitleUpdateModalPartial")
     @await Html.PartialAsync("_CategoryUpdateModalPartial")
-    @await Html.PartialAsync("_AgentUpdateModalPartial")
+    @await Html.PartialAsync("_TechnicianUpdateModalPartial")
 </div>
 
 @section Scripts{

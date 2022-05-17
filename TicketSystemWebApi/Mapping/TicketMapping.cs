@@ -21,6 +21,7 @@ namespace TicketSystemWebApi.Mapping
             returnValue.UserID = ticket.Owner.UserID;
             returnValue.UserName = String.Format("{0} {1}", ticket.Owner.FirstName, ticket.Owner.LastName);
             returnValue.Email = ticket.Owner.Email;
+            returnValue.TechnicianID = ticket.TechnicianID;
 
             List<GetMessagesDto> messages = new List<GetMessagesDto>();
             messages.AddRange(ticket.Messages.Where(p => p.TicketID == ticket.TicketID).Select(p => MessageMapping.GetMessageToDto(p)).OrderBy(p => p.DateTimeCreated));
@@ -78,6 +79,7 @@ namespace TicketSystemWebApi.Mapping
         internal static Database.Entities.Ticket PutTicketStatusFromDto(Database.Entities.Ticket returnValue, PutTicketStatusDto ticket)
         {
             returnValue.StatusID = ticket.StatusID;
+            returnValue.TechnicianID = ticket.TechnicianID;
             returnValue.DateTimeModified = DateTime.Now;
 
             return returnValue;
@@ -96,6 +98,15 @@ namespace TicketSystemWebApi.Mapping
         internal static Database.Entities.Ticket PutTicketCategoryFromDto(Database.Entities.Ticket returnValue, PutTicketCategoryDto ticket)
         {
             returnValue.CategoryID = ticket.CategoryID;
+            returnValue.DateTimeModified = DateTime.Now;
+
+            return returnValue;
+        }
+
+        // Mapping DTO to data update in database - technician.
+        internal static Database.Entities.Ticket PutTicketTechnicianFromDto(Database.Entities.Ticket returnValue, PutTicketTechnicianDto ticket)
+        {
+            returnValue.TechnicianID = ticket.TechnicianID;
             returnValue.DateTimeModified = DateTime.Now;
 
             return returnValue;

@@ -10,9 +10,10 @@ namespace TicketSystemWebApp.Services
         Task<List<CategoryViewModel>> GetCategoriesAsync();
         Task PostTicketAsync(TicketNewViewModel ticket, Guid userID);
         Task PostMessageAsync(MessageNewViewModel message, Guid userID); 
-        Task PutTicketStatusAsync(TicketStatusUpdateViewModel ticket, Guid userID);
+        Task PutTicketStatusAsync(TicketStatusUpdateViewModel ticket, Guid userID, Guid technicianID);
         Task PutTicketTitleAsync(TicketTitleUpdateViewModel ticket, Guid userID);
         Task PutTicketCategoryAsync(TicketCategoryUpdateViewModel ticket, Guid userID);
+        Task PutTicketTechnicianAsync(TicketTechnicianUpdateViewModel ticket, Guid userID);
         Task DeleteTicketAsync(Guid ticketID, Guid userID);
     }
 }

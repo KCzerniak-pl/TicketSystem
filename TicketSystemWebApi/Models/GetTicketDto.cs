@@ -38,5 +38,7 @@ namespace TicketSystemWebApi.Models
         public string Email { get; set; } = default!;
 
         public List<GetMessagesDto> Messages { get; set; } = default!;
+
+        public Guid? TechnicianID { get; set; }
     }
 }

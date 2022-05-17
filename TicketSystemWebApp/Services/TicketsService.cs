@@ -98,7 +98,7 @@ namespace TicketSystemWebApp.Services
         }
 
         // Update status for ticket.
-        public async Task PutTicketStatusAsync(TicketStatusUpdateViewModel ticket, Guid userID)
+        public async Task PutTicketStatusAsync(TicketStatusUpdateViewModel ticket, Guid userID, Guid technicianID)
         {
             using (HttpClient httpClient = new HttpClient())
             {
@@ -106,7 +106,7 @@ namespace TicketSystemWebApp.Services
                 TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
 
                 // Mapping data to DTO and update status for ticket (used service from TicketSystemWebApiClient).
-                await apiClient.PutTicketStatusAsync(TicketMapping.PutTicketStatusToDto(ticket, userID));
+                await apiClient.PutTicketStatusAsync(TicketMapping.PutTicketStatusToDto(ticket, userID, technicianID));
             }
         }
 
@@ -133,6 +133,19 @@ namespace TicketSystemWebApp.Services
 
                 // Mapping data to DTO and update category for ticket (used service from TicketSystemWebApiClient).
                 await apiClient.PutTicketCategoryAsync(TicketMapping.PutTicketCategoryToDto(ticket, userID));
+            }
+        }
+
+        // Update technician for ticket.
+        public async Task PutTicketTechnicianAsync(TicketTechnicianUpdateViewModel ticket, Guid userID)
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                // API client
+                TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
+
+                // Mapping data to DTO and update category for ticket (used service from TicketSystemWebApiClient).
+                await apiClient.PutTicketTechnicianAsync(TicketMapping.PutTicketTechnicianToDto(ticket, userID));
             }
         }
 
