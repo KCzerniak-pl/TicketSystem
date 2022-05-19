@@ -41,7 +41,7 @@
                         foreach (var ticket in Model)
                         {
                             <tr class="table-row" data-href="@Url.Action("edit", "ticket")/@ticket.TicketID">
-                                <th scope="row">@(i++)</th>
+                                <th scope="row">@ticket.No</th>
                                 <td>@ticket.UserName</td>
                                 <td>@ticket.DateTimeCreated.ToString("dd/MM/yyyy HH:mm:ss")</td>
                                 <td>@ticket.DateTimeModified.ToString("dd/MM/yyyy HH:mm:ss")</td>

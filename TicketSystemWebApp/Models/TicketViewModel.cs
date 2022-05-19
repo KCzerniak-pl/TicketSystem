@@ -4,6 +4,8 @@
     {
         public Guid TicketID { get; set; }
 
+        public int No { get; set; }
+
         public Guid StatusID { get; set; }
 
         public string StatusName { get; set; } = default!;

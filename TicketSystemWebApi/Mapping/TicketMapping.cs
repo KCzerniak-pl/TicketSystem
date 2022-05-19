@@ -36,6 +36,7 @@ namespace TicketSystemWebApi.Mapping
             GetTicketsDto returnValue = new GetTicketsDto();
 
             returnValue.TicketID = ticket.TicketID;
+            returnValue.No = ticket.No;
             returnValue.StatusID = ticket.Status.StatusID;
             returnValue.StatusName = ticket.Status.Name;
             returnValue.CategoryName = ticket.Category.Name;

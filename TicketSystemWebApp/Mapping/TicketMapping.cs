@@ -32,6 +32,7 @@ namespace TicketSystemWebApp.Mapping
             TicketViewModel returnValue = new TicketViewModel();
 
             returnValue.TicketID = dto.TicketID;
+            returnValue.No = dto.No;
             returnValue.StatusID = dto.StatusID;
             returnValue.StatusName = dto.StatusName;
             returnValue.CategoryName = dto.CategoryName;

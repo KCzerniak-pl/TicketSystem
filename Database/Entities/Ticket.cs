@@ -11,6 +11,10 @@ namespace Database.Entities
         [Required]
         public Guid TicketID { get; set; } = default!;
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Required]
+        public int No { get; set; }
+
         [Column(TypeName = "uniqueidentifier")]
         [Required]
         public Guid OwnerID { get; set; } = default!;

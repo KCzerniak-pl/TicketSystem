@@ -1352,6 +1352,9 @@ namespace TicketSystemWebApp
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.Guid TicketID { get; set; }
 
+        [Newtonsoft.Json.JsonProperty("no", Required = Newtonsoft.Json.Required.Always)]
+        public int No { get; set; }
+
         [Newtonsoft.Json.JsonProperty("statusID", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.Guid StatusID { get; set; }

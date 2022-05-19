@@ -76,6 +76,8 @@ namespace Database.Migrations.TicketsMigrations
                 columns: table => new
                 {
                     TicketID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    No = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     OwnerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TechnicianID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     StatusID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),

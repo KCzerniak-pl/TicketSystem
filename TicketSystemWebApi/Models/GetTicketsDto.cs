@@ -8,6 +8,9 @@ namespace TicketSystemWebApi.Models
         public Guid TicketID { get; set; }
 
         [Required]
+        public int No { get; set; }
+
+        [Required]
         public Guid StatusID { get; set; }
 
         [Required]

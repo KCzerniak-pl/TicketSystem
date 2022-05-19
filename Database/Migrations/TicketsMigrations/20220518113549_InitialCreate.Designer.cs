@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations.TicketsMigrations
 {
     [DbContext(typeof(TicketsDbContext))]
-    [Migration("20220502115119_InitialCreate")]
+    [Migration("20220518113549_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -96,6 +96,12 @@ namespace Database.Migrations.TicketsMigrations
 
                     b.Property<DateTimeOffset>("DateTimeModified")
                         .HasColumnType("datetimeoffset(0)");
+
+                    b.Property<int>("No")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("No"), 1L, 1);
 
                     b.Property<Guid>("OwnerID")
                         .HasColumnType("uniqueidentifier");

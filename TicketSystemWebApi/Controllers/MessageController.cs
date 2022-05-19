@@ -47,6 +47,10 @@ namespace TicketSystemWebApi.Controllers
                             _ = _messagesDbContext.Messages.Add(MessageMapping.PostMessageFromDto(postMessage));
                             _ = await _messagesDbContext.SaveChangesAsync();
 
+                            // Set date update for ticket.
+                            ticket.DateTimeModified = DateTime.Now;
+                            _ = await _ticketsDbContext.SaveChangesAsync();
+
                             return StatusCode(StatusCodes.Status204NoContent);
                         }
                         else
