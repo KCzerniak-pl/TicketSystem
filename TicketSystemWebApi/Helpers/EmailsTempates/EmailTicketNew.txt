@@ -1,0 +1,102 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto" rel="stylesheet" type="text/css">
+	<title>Nowe zgłoszenie</title>
+	<style type="text/css">
+		body {
+		  background: #c4d3f6;
+		}
+		
+		* {
+		  font-family: 'Open Sans', Roboto, sans-serif;
+		}
+
+		.wrapContainer {
+		  width: 100%;
+		  height: 100%;
+		}
+
+		.emailContainer {
+		  width: 600px;
+		  background: #fbfbfb;
+		  border-bottom: 1px solid #f2f2f2;
+		}
+
+		.emailContainer td {
+		  padding-top: 15px;
+		  padding-right: 20px;
+		  padding-bottom: 15px;
+		  padding-left: 20px;
+		  margin: 0;
+		  text-align: left;
+		}
+		
+		.emailContainer .header {
+		  padding-bottom: 0px !important;
+		  color: #808080;
+		  text-transform: uppercase;
+		}
+
+		.emailContainer .value {
+		  padding-top: 0px !important;
+		  color: #555555;
+		}
+	</style>
+</head>
+<body>
+	<table cellpadding="0" cellspacing="0" class="wrapContainer">
+		<tr>
+			<td align="center" valign="top">
+				<table cellpadding="20" cellspacing="0" class="emailContainer">
+					<tr>
+						<td class="header">Zgłoszenie nr:</td>				
+					</tr>
+					<tr>
+						<td class="value">{ticket.No}</td>				
+					</tr>
+					<tr>
+						<td class="header">ID:</td>					
+					</tr>
+					<tr>
+						<td class="value">{ticket.TicketID}</td>					
+					</tr>
+				</table>
+
+				<table cellpadding="20" cellspacing="0" class="emailContainer">					
+					<tr>
+						<td class="header">Data dodania zgłoszenia:</td>				
+					</tr>
+					<tr>
+						<td class="value">{ticket.DateTimeCreated}</td>				
+					</tr>
+					<tr>
+						<td class="header">Autor zgłoszenia:</td>					
+					</tr>
+					<tr>
+						<td class="value">{ticket.FirstName} {ticket.LastName}</td>					
+					</tr>				
+					<tr>
+						<td class="header">Temat zgłoszenia:</td>					
+					</tr>
+					<tr>
+						<td class="value">{ticket.Title}</td>					
+					</tr>
+				</table>
+  				
+				<table cellpadding="20" cellspacing="0" class="emailContainer">
+					<tr>
+						<td class="header">Link:</td>
+					</tr>
+					<tr>
+						<td class="value">https://localhost:7230/ticket/edit/{ticket.TicketID}</td>
+					</tr>				
+				</table>			
+			</td>
+		</tr>
+	</table>
+</body>
+</html> 

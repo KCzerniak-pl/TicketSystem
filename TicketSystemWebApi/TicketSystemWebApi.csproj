@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Database\Database.csproj" />
+    <ProjectReference Include="..\EmailService\EmailService.csproj" />
   </ItemGroup>
 
 </Project>

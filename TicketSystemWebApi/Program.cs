@@ -1,3 +1,4 @@
+using EmailService;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TicketSystemWebApi.Helpers;
@@ -21,6 +22,13 @@ builder.Services.AddDbContext<Database.MessagesDbContext>(opt => opt.UseSqlServe
 builder.Services.AddDbContext<Database.CategoriesDbContext>(opt => opt.UseSqlServer(connectonString));
 builder.Services.AddDbContext<Database.StatusesDbContext>(opt => opt.UseSqlServer(connectonString));
 builder.Services.AddDbContext<Database.UsersDbContext>(opt => opt.UseSqlServer(connectonString));
+
+// Get email configuration from "appsettings.json" (equired references to the library "EmailService").
+EmailConfiguration emailConfiguration = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
+// Dependency injection (for email sending).
+builder.Services.AddSingleton(emailConfiguration);
+// Dependency injection - inverse of control (for email sending). Mapping interface to object.
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 var app = builder.Build();
 

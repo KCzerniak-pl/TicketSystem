@@ -1,4 +1,5 @@
 ﻿using Database;
+using EmailService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
@@ -15,13 +16,16 @@ namespace TicketSystemWebApi.Controllers
         private readonly TicketsDbContext _ticketsDbContext;
         private readonly UsersDbContext _usersDbContext;
         private readonly StatusesDbContext _statusesDbContext;
+        private readonly IEmailSender _emailSender;
 
         // Required configuration of connection context with the database in the Program.cs file and references to the library "Database".
-        public TicketController(TicketsDbContext tickeetsDbContext, UsersDbContext usersDbContext, StatusesDbContext statusesDbContext)
+        // Dependency injection - inverse of control (for email sending). Required configuration in the Program.cs.
+        public TicketController(TicketsDbContext tickeetsDbContext, UsersDbContext usersDbContext, StatusesDbContext statusesDbContext, IEmailSender emailSender)
         {
             _ticketsDbContext = tickeetsDbContext;
             _usersDbContext = usersDbContext;
             _statusesDbContext = statusesDbContext;
+            _emailSender = emailSender;
         }
 
         //GET: api/<ValuesController>?ticketID=<ticketID>&userID=<userID>
@@ -74,6 +78,13 @@ namespace TicketSystemWebApi.Controllers
                         Database.Entities.Ticket ticket = TicketMapping.PostTicketFromDto(postTicket, statusForNewTicket);
                         _ = _ticketsDbContext.Tickets.Add(ticket);
                         _ = await _ticketsDbContext.SaveChangesAsync();
+
+                        // Retrieving data from database about user who added new ticket.
+                        Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == postTicket.UserID).FirstAsync();
+                        // Retrieving ordinal number.
+                        int ordinalNumber = await _ticketsDbContext.Tickets.Where(p => p.TicketID == ticket.TicketID).Select(p => p.No).FirstAsync();
+                        // Send e-mail.
+                        Helpers.SendEmail.Send(_emailSender, 1, ticket, ordinalNumber, user);
 
                         return StatusCode(StatusCodes.Status204NoContent);
                     }
