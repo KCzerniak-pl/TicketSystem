@@ -81,10 +81,10 @@ namespace TicketSystemWebApi.Controllers
 
                         // Retrieving data from database about user who added new ticket.
                         Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == postTicket.UserID).FirstAsync();
-                        // Retrieving ordinal number.
-                        int ordinalNumber = await _ticketsDbContext.Tickets.Where(p => p.TicketID == ticket.TicketID).Select(p => p.No).FirstAsync();
+                        // Retrieving data from database about selected ticket - after added.
+                        ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == ticket.TicketID).Include(p => p.Status).Include(p => p.Owner).FirstAsync();
                         // Send e-mail.
-                        Helpers.SendEmail.Send(_emailSender, 1, ticket, ordinalNumber, user);
+                        Helpers.SendEmail.Send(_emailSender, 1, ticket);
 
                         return StatusCode(StatusCodes.Status204NoContent);
                     }
@@ -122,6 +122,11 @@ namespace TicketSystemWebApi.Controllers
                             // Update data in database about selected ticket.
                             _ = TicketMapping.PutTicketStatusFromDto(ticket, putTicket);
                             _ = await _ticketsDbContext.SaveChangesAsync();
+
+                            // Retrieving data from database about selected ticket - after update.
+                            ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == putTicket.TicketID).Include(p => p.Status).Include(p => p.Owner).FirstAsync();
+                            // Send e-mail.
+                            Helpers.SendEmail.Send(_emailSender, 2, ticket, user);
 
                             return StatusCode(StatusCodes.Status204NoContent);
                         }
