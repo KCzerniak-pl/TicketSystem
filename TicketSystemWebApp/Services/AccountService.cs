@@ -6,7 +6,7 @@ namespace TicketSystemWebApp.Services
     public class AccountService : IAccountService
     {
         // URL for WebApi (address and port can be verified in launchSettings.json in WebAPI).
-        private readonly string _url = "http://localhost:5173";
+        private readonly string _url = "http://host.docker.internal:5173";
 
         // logging user.
         public async Task<LoginResponseDto> LoginAsync(LoginViewModel user)

@@ -6,7 +6,7 @@ namespace TicketSystemWebApp.Services
     public class TicketsService : ITicketsService
     {
         // URL for WebApi (address and port can be verified in launchSettings.json in WebAPI).
-        private readonly string _url = "http://localhost:5173";
+        private readonly string _url = "http://host.docker.internal:5173";
 
         // Retrieving data about all tickets or all tickets for selected user.
         public async Task<TicketViewModel[]> GetTicketsAsync(int skip, int take, Guid userID = default)
