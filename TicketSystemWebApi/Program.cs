@@ -1,7 +1,11 @@
 using EmailService;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 using TicketSystemWebApi.Helpers;
+using TicketSystemWebApi.Helpers.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +17,52 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x =>
 {
     x.SwaggerDoc("v1", new OpenApiInfo { Title = "Ticket System API", Version = "v1" });
+
+    // JWT - config for Swagger.
+    x.AddSecurityDefinition("BearerAuth", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = JwtBearerDefaults.AuthenticationScheme.ToLowerInvariant(),
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        BearerFormat = "JWT",
+        Description = "JWT Authorization header using the Bearer scheme."
+    });
+
+    // JWT - operation filter for Swagger.
+    x.OperationFilter<AuthResponsesOperationFilter>();
 });
+
+// JWT - section "appsettings.json" mapping to object "JwtConfig".
+builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
+
+// JWT - Validate token.
+builder.Services.AddAuthentication(opt =>
+{
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; // Sets the default scheme to use when authenticating.   
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; // Sets the default scheme to use when challenging.   
+    opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; // Sets the default fallback scheme.
+})
+    // Authentication for JWT Bearer.
+    .AddJwtBearer(jwt =>
+    {
+        // Secret string used to sign and verify JWT tokens.
+        var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtConfig:Secret"]);
+
+        // Token should be stored after a successful authorization.
+        jwt.SaveToken = true;
+
+        // Set of parameters that are used by validating a token.
+        jwt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromMinutes(1)
+        };
+    });
 
 // Context for database connection (required references to the library "Database").
 string connectonString = builder.Configuration.GetConnectionString("TicketSystemDatabase");

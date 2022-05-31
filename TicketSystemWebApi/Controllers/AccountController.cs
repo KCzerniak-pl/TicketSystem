@@ -1,7 +1,11 @@
 ﻿using Database;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using TicketSystemWebApi.Helpers.Jwt;
 using TicketSystemWebApi.Mapping;
 using TicketSystemWebApi.Models;
 
@@ -10,13 +14,14 @@ namespace TicketSystemWebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
-    public class AccountController : ControllerBase
+    public class AccountController : AuthControllerBase
     {
         // Required references to the library "Database".
         private readonly UsersDbContext _usersDbContext;
 
-        // Required configuration of connection context with the database in the Program.cs file.
-        public AccountController(UsersDbContext usersDbContext)
+        // JWT - inheritance from class AuthControllerBase.cs.
+        // UsersDbContext - required configuration of connection context with the database in the Program.cs file.
+        public AccountController(IOptionsMonitor<JwtConfig> optionsMonitor, UsersDbContext usersDbContext) : base(optionsMonitor)
         {
             _usersDbContext = usersDbContext;
         }
@@ -38,20 +43,24 @@ namespace TicketSystemWebApi.Controllers
 
                     if (verificationResult == PasswordVerificationResult.Success)
                     {
-                        return StatusCode(StatusCodes.Status200OK, AccountMapping.LoginResponseToDto(true, String.Empty, user));
+                        // JWT - create token.
+                        var jwtToken = GenerateJwtToken(user);
+
+                        return StatusCode(StatusCodes.Status200OK, AccountMapping.LoginResponseToDto(true, String.Empty, user, jwtToken));
                     }
                 }
                 catch (Exception)
                 {
-                    return StatusCode(StatusCodes.Status400BadRequest, AccountMapping.LoginResponseToDto(false, "Błędny login lub hasło", null));
+                    return StatusCode(StatusCodes.Status400BadRequest, AccountMapping.LoginResponseToDto(false, "Błędny login lub hasło"));
                 }
             }
 
-            return StatusCode(StatusCodes.Status400BadRequest, AccountMapping.LoginResponseToDto(false, "Nieprawidłowe dane", null));
+            return StatusCode(StatusCodes.Status400BadRequest, AccountMapping.LoginResponseToDto(false, "Nieprawidłowe dane"));
         }
 
         //GET: api/<ValuesController>/<UserID>
         [HttpGet("{userID}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<GetUsersDto>> GetUserData([FromRoute] Guid userID)
         {
             if (_usersDbContext.Database.CanConnect())
@@ -74,6 +83,7 @@ namespace TicketSystemWebApi.Controllers
 
         //GET: api/<ValuesController/Technicians
         [HttpGet("Technicians")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<GetUsersDto>>> GetTechniciansData()
         {
             if (_usersDbContext.Database.CanConnect())

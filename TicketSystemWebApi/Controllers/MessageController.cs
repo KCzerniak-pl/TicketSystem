@@ -1,5 +1,6 @@
 ﻿using Database;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TicketSystemWebApi.Mapping;
@@ -10,6 +11,7 @@ namespace TicketSystemWebApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Produces("application/json")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MessageController : ControllerBase
     {
         private readonly TicketsDbContext _ticketsDbContext;

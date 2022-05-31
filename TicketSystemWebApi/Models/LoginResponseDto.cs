@@ -5,6 +5,9 @@ namespace TicketSystemWebApi.Models
     public class LoginResponseDto
     {
         [Required]
+        public string Token { get; set; } = default!;
+
+        [Required]
         public bool Success { get; set; } = default!;
 
         [Required]

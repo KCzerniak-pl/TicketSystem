@@ -40,12 +40,13 @@ namespace TicketSystemWebApi.Mapping
         }
 
         // Mapping data from database to DTO - login.
-        internal static LoginResponseDto LoginResponseToDto(bool success, string error, Database.Entities.User? user)
+        internal static LoginResponseDto LoginResponseToDto(bool success, string error, Database.Entities.User user = default!, string jwtToken = default!)
         {
             LoginResponseDto returnValue = new LoginResponseDto();
 
-            if (user != null)
+            if (user != default)
             {
+                returnValue.Token = jwtToken;
                 returnValue.UserID = user.UserID;
                 returnValue.UserName = string.Format("{0} {1}", user.FirstName, user.LastName);
             }
