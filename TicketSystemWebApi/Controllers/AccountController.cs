@@ -44,9 +44,9 @@ namespace TicketSystemWebApi.Controllers
                     if (verificationResult == PasswordVerificationResult.Success)
                     {
                         // JWT - create token.
-                        var jwtToken = GenerateJwtToken(user);
+                        var jwt = GenerateJwtToken(user);
 
-                        return StatusCode(StatusCodes.Status200OK, AccountMapping.LoginResponseToDto(true, String.Empty, user, jwtToken));
+                        return StatusCode(StatusCodes.Status200OK, AccountMapping.LoginResponseToDto(true, String.Empty, jwt));
                     }
                 }
                 catch (Exception)

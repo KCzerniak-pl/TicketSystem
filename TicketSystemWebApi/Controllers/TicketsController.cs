@@ -29,21 +29,21 @@ namespace TicketSystemWebApi.Controllers
         {
             if (_ticketsDbContext.Database.CanConnect())
             {
-                IEnumerable<GetTicketsDto> users;
+                IEnumerable<GetTicketsDto> tickets;
                 if (userID == default)
                 {
                     // Retrieving data from database about all ticket and remapping to DTO.
-                    users = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeModified).Skip(skip).Take(take).Include(p => p.Owner).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
+                    tickets = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeModified).Skip(skip).Take(take).Include(p => p.Owner).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
                 }
                 else
                 {
                     // Retrieving data from database about all ticket for user and remapping to DTO.
-                    users = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeModified).Where(p => p.OwnerID == userID).Skip(skip).Take(take).Include(p => p.Owner).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
+                    tickets = await _ticketsDbContext.Tickets.OrderByDescending(p => p.DateTimeModified).Where(p => p.OwnerID == userID).Skip(skip).Take(take).Include(p => p.Owner).Include(p => p.Category).Include(p => p.Status).Select(p => TicketMapping.GetTicketsToDto(p)).ToArrayAsync();
                 }
 
-                if (users.Any())
+                if (tickets.Any())
                 {
-                    return StatusCode(StatusCodes.Status200OK, users);
+                    return StatusCode(StatusCodes.Status200OK, tickets);
                 }
 
                 return StatusCode(StatusCodes.Status404NotFound);

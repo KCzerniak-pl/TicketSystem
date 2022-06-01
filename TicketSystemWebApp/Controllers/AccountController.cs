@@ -43,9 +43,8 @@ namespace TicketSystemWebApp.Controllers
                 if (loginResponse.Success)
                 {
                     // Save data for logged user in session / cookies.
+                    SessionHelper.SetObjectAsJson(HttpContext, "Jwt", loginResponse.Jwt.ToString(), user.RemeberMe);
                     SessionHelper.SetObjectAsJson(HttpContext, "Authorization", loginResponse.Success.ToString(), user.RemeberMe);
-                    SessionHelper.SetObjectAsJson(HttpContext, "UserID", loginResponse.UserID.ToString(), user.RemeberMe);
-                    SessionHelper.SetObjectAsJson(HttpContext, "UserName", loginResponse.UserName.ToString(), user.RemeberMe);
 
                     return RedirectToLocal(returnUrl!);
                 }

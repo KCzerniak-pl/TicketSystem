@@ -1434,16 +1434,12 @@ namespace TicketSystemWebApp
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class LoginResponseDto
     {
+        [Newtonsoft.Json.JsonProperty("jwt", Required = Newtonsoft.Json.Required.Always)]
+        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
+        public string Jwt { get; set; }
+
         [Newtonsoft.Json.JsonProperty("success", Required = Newtonsoft.Json.Required.Always)]
         public bool Success { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("userID", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid UserID { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("userName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public string UserName { get; set; }
 
         [Newtonsoft.Json.JsonProperty("error", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]

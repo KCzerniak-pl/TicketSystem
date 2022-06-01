@@ -32,19 +32,22 @@ namespace TicketSystemWebApp.Controllers
                 return RedirectToAction(nameof(AccountController.Login), "Account");
             }
 
-            // Get userID from session.
-            Guid userID = SessionHelper.GetObjectFromJson<Guid>(HttpContext, "UserID");
+            // Get JWT from session.
+            string? jwt = SessionHelper.GetObjectFromJson<string>(HttpContext, "Jwt");
+
+            // Get userID from JWT.
+            Guid userID = Jwt.GetObjectFromJwt<Guid>(jwt!, "UserID");
 
             // Retrieving data about selected user.
-            UserViewModel user = await _accountService.GetUserDataAsync(userID);
+            UserViewModel user = await _accountService.GetUserDataAsync(jwt!);
 
-            // Check data about selected user - retrieving count about all ticket or only ticket for selected user.
-            int ticetsCount = user.Role.ShowAll ? await _ticketsService.GetTicketsCountAsync() : await _ticketsService.GetTicketsCountAsync(userID);
+            // Retrieving count about all ticket or only ticket for selected user.
+            int ticetsCount = await _ticketsService.GetTicketsCountAsync(jwt!, user.Role.ShowAll);
 
             if (ticetsCount > 0)
             {
-                // Check data about selected user - retrieving data about all ticket or only ticket for selected user.
-                TicketViewModel[] tickets = user.Role.ShowAll ? await _ticketsService.GetTicketsAsync((page - 1) * take, take) : await _ticketsService.GetTicketsAsync((page - 1) * take, take, userID);
+                // Retrieving data about all ticket or only ticket for selected user.
+                TicketViewModel[] tickets = await _ticketsService.GetTicketsAsync(jwt!, (page - 1) * take, take, user.Role.ShowAll);
 
                 // Retrieving data about all statuses.
                 IEnumerable<string> statuses = _configuration.GetSection("Statuses:Guid").AsEnumerable().Where(p => p.Value != null).Select(p => p.Value).Reverse();
@@ -70,14 +73,14 @@ namespace TicketSystemWebApp.Controllers
                 return RedirectToAction(nameof(AccountController.Login), "Account", new { returnUrl = string.Format("/ticket/{0}", nameof(New)) });
             }
 
-            // Get userID from session.
-            Guid userID = SessionHelper.GetObjectFromJson<Guid>(HttpContext, "UserID");
+            // Get JWT from session.
+            string? jwt = SessionHelper.GetObjectFromJson<string>(HttpContext, "Jwt");
 
-            // Check data about selected user - retrieving count about all ticket or only ticket for selected user.
-            UserViewModel user = await _accountService.GetUserDataAsync(userID);
+            // Retrieving data about selected user.
+            UserViewModel user = await _accountService.GetUserDataAsync(jwt!);
 
             // Data for drop down list with categories.
-            List<CategoryViewModel> categories = await _ticketsService.GetCategoriesAsync();
+            List<CategoryViewModel> categories = await _ticketsService.GetCategoriesAsync(jwt!);
             List<SelectListItem> selectListItem = new List<SelectListItem>();
             categories.ForEach(x => selectListItem.Add(new SelectListItem { Value = x.CategoryID.ToString(), Text = x.Name }));
 
@@ -97,23 +100,23 @@ namespace TicketSystemWebApp.Controllers
                 return RedirectToAction(nameof(AccountController.Login), "Account", new { returnUrl = string.Format("/ticket/{0}", nameof(Edit)) });
             }
 
-            // Get userID from session.
-            Guid userID = SessionHelper.GetObjectFromJson<Guid>(HttpContext, "UserID");
+            // Get JWT from session.
+            string? jwt = SessionHelper.GetObjectFromJson<string>(HttpContext, "Jwt");
 
-            // Check data about selected user - retrieving count about all ticket or only ticket for selected user.
-            UserViewModel user = await _accountService.GetUserDataAsync(userID);
+            // Retrieving data about selected user.
+            UserViewModel user = await _accountService.GetUserDataAsync(jwt!);
 
             // Retrieving data about selected ticket.
-            TicketViewModel ticket = await _ticketsService.GetTicketAsync(ticketID, userID);
+            TicketViewModel ticket = await _ticketsService.GetTicketAsync(jwt!, ticketID);
 
             // Retrieving data about categories.
-            List<CategoryViewModel> categories = await _ticketsService.GetCategoriesAsync();
+            List<CategoryViewModel> categories = await _ticketsService.GetCategoriesAsync(jwt!);
             // Data for drop down list with categories.
             List<SelectListItem> selectListItemForCategories = new List<SelectListItem>();
             categories.ForEach(x => selectListItemForCategories.Add(new SelectListItem { Value = x.CategoryID.ToString(), Text = x.Name }));
 
             // Retrieving data about technicians.
-            List<UserViewModel> technicians = await _accountService.GetTechniciansAsync();
+            List<UserViewModel> technicians = await _accountService.GetTechniciansAsync(jwt!);
             // Data for drop down list with technicians.
             List<SelectListItem> selectListItemForTechnicians = new List<SelectListItem>();
             technicians.ForEach(x => selectListItemForTechnicians.Add(new SelectListItem { Value = x.UserID.ToString(), Text = x.FirstName + " " + x.LastName }));
@@ -151,13 +154,13 @@ namespace TicketSystemWebApp.Controllers
                 return RedirectToAction(nameof(AccountController.Login), "Account");
             }
 
-            // Get userID from session.
-            Guid userID = SessionHelper.GetObjectFromJson<Guid>(HttpContext, "UserID");
-
             if (ModelState.IsValid)
             {
+                // Get JWT from session.
+                string? jwt = SessionHelper.GetObjectFromJson<string>(HttpContext, "Jwt");
+
                 // Add new ticket (used service from TicketsService).
-                await _ticketsService.PostTicketAsync(ticket, userID);
+                await _ticketsService.PostTicketAsync(jwt!, ticket);
             }
             else
             {
@@ -179,11 +182,11 @@ namespace TicketSystemWebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                // Get userID from session.
-                Guid userID = SessionHelper.GetObjectFromJson<Guid>(HttpContext, "UserID");
+                // Get JWT from session.
+                string? jwt = SessionHelper.GetObjectFromJson<string>(HttpContext, "Jwt");
 
                 // Add new message for ticket (used service from TicketsService).
-                await _ticketsService.PostMessageAsync(message, userID);
+                await _ticketsService.PostMessageAsync(jwt!, message);
             }
 
             return RedirectToAction(nameof(Edit), new { message.TicketID });
@@ -201,20 +204,20 @@ namespace TicketSystemWebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                // Get userID from session.
-                Guid userID = SessionHelper.GetObjectFromJson<Guid>(HttpContext, "UserID");
+                // Get JWT from session.
+                string? jwt = SessionHelper.GetObjectFromJson<string>(HttpContext, "Jwt");
 
                 if (technicianID is null)
                 {
                     // Retrieving data about technicians.
-                    List<UserViewModel> technicians = await _accountService.GetTechniciansAsync();
+                    List<UserViewModel> technicians = await _accountService.GetTechniciansAsync(jwt!);
 
                     // First technician is default.
                     technicianID = technicians.Select(p => p.UserID).FirstOrDefault();
                 }
 
                 // Update status for ticket (used service from TicketsService).
-                await _ticketsService.PutTicketStatusAsync(ticket, userID, technicianID ?? default);
+                await _ticketsService.PutTicketStatusAsync(jwt!, ticket, technicianID ?? default);
             }
 
             return RedirectToAction(nameof(Index));
@@ -232,11 +235,11 @@ namespace TicketSystemWebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                // Get userID from session.
-                Guid userID = SessionHelper.GetObjectFromJson<Guid>(HttpContext, "UserID");
+                // Get JWT from session.
+                string? jwt = SessionHelper.GetObjectFromJson<string>(HttpContext, "Jwt");
 
                 // Update title for ticket (used service from TicketsService).
-                await _ticketsService.PutTicketTitleAsync(ticket, userID);
+                await _ticketsService.PutTicketTitleAsync(jwt!, ticket);
             }
 
             return RedirectToAction(nameof(Edit), new { ticket.TicketID });
@@ -254,11 +257,11 @@ namespace TicketSystemWebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                // Get userID from session.
-                Guid userID = SessionHelper.GetObjectFromJson<Guid>(HttpContext, "UserID");
+                // Get JWT from session.
+                string? jwt = SessionHelper.GetObjectFromJson<string>(HttpContext, "Jwt");
 
                 // Update category for ticket (used service from TicketsService).
-                await _ticketsService.PutTicketCategoryAsync(ticket, userID);
+                await _ticketsService.PutTicketCategoryAsync(jwt!, ticket);
             }
 
             return RedirectToAction(nameof(Edit), new { ticket.TicketID });
@@ -276,11 +279,11 @@ namespace TicketSystemWebApp.Controllers
 
             if (ModelState.IsValid)
             {
-                // Get userID from session.
-                Guid userID = SessionHelper.GetObjectFromJson<Guid>(HttpContext, "UserID");
+                // Get JWT from session.
+                string? jwt = SessionHelper.GetObjectFromJson<string>(HttpContext, "Jwt");
 
                 // Update category for ticket (used service from TicketsService).
-                await _ticketsService.PutTicketTechnicianAsync(ticket, userID);
+                await _ticketsService.PutTicketTechnicianAsync(jwt!, ticket);
             }
 
             return RedirectToAction(nameof(Edit), new { ticket.TicketID });
@@ -295,11 +298,11 @@ namespace TicketSystemWebApp.Controllers
                 return RedirectToAction(nameof(AccountController.Login), "Account");
             }
 
-            // Get userID from session.
-            Guid userID = SessionHelper.GetObjectFromJson<Guid>(HttpContext, "UserID");
+            // Get JWT from session.
+            string? jwt = SessionHelper.GetObjectFromJson<string>(HttpContext, "Jwt");
 
             // Delete ticket (used service from TicketsService).
-            await _ticketsService.DeleteTicketAsync(ticketID, userID);
+            await _ticketsService.DeleteTicketAsync(jwt!, ticketID);
 
             return RedirectToAction(nameof(Index));
         }

@@ -1,7 +1,8 @@
 ﻿@using TicketSystemWebApp.Helpers;
 @{
     bool authorization = SessionHelper.GetObjectFromJson<bool>(Context, "Authorization");
-    string userName = SessionHelper.GetObjectFromJson<string>(Context, "UserName") ?? "";
+    string jwt = SessionHelper.GetObjectFromJson<string>(Context, "Jwt") ?? string.Empty;
+    string userName = !string.IsNullOrEmpty(jwt) ? Jwt.GetObjectFromJwt<string>(jwt, "UserName") : "";
 }
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="pl">

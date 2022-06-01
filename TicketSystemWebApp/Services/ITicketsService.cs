@@ -4,16 +4,16 @@ namespace TicketSystemWebApp.Services
 {
     public interface ITicketsService
     {
-        Task<TicketViewModel[]> GetTicketsAsync(int skip, int take, Guid userID = default);
-        Task<int> GetTicketsCountAsync(Guid userID = default);
-        Task<TicketViewModel> GetTicketAsync(Guid ticketID, Guid userID);
-        Task<List<CategoryViewModel>> GetCategoriesAsync();
-        Task PostTicketAsync(TicketNewViewModel ticket, Guid userID);
-        Task PostMessageAsync(MessageNewViewModel message, Guid userID); 
-        Task PutTicketStatusAsync(TicketStatusUpdateViewModel ticket, Guid userID, Guid technicianID);
-        Task PutTicketTitleAsync(TicketTitleUpdateViewModel ticket, Guid userID);
-        Task PutTicketCategoryAsync(TicketCategoryUpdateViewModel ticket, Guid userID);
-        Task PutTicketTechnicianAsync(TicketTechnicianUpdateViewModel ticket, Guid userID);
-        Task DeleteTicketAsync(Guid ticketID, Guid userID);
+        Task<TicketViewModel[]> GetTicketsAsync(string jwt, int skip, int take, bool showAll);
+        Task<int> GetTicketsCountAsync(string jwt, bool showAll);
+        Task<TicketViewModel> GetTicketAsync(string jwt, Guid ticketID);
+        Task<List<CategoryViewModel>> GetCategoriesAsync(string jwt);
+        Task PostTicketAsync(string jwt, TicketNewViewModel ticket);
+        Task PostMessageAsync(string jwt, MessageNewViewModel message); 
+        Task PutTicketStatusAsync(string jwt, TicketStatusUpdateViewModel ticket, Guid technicianID);
+        Task PutTicketTitleAsync(string jwt, TicketTitleUpdateViewModel ticket);
+        Task PutTicketCategoryAsync(string jwt, TicketCategoryUpdateViewModel ticket);
+        Task PutTicketTechnicianAsync(string jwt, TicketTechnicianUpdateViewModel ticket);
+        Task DeleteTicketAsync(string jwt, Guid ticketID);
     }
 }

@@ -5,7 +5,7 @@ namespace TicketSystemWebApp.Services
     public interface IAccountService
     {
         Task<LoginResponseDto> LoginAsync(LoginViewModel user);
-        Task<UserViewModel> GetUserDataAsync(Guid userID);
-        Task<List<UserViewModel>> GetTechniciansAsync();
+        Task<UserViewModel> GetUserDataAsync(string jwt);
+        Task<List<UserViewModel>> GetTechniciansAsync(string jwt);
     }
 }

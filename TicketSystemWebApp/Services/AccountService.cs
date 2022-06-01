@@ -1,4 +1,5 @@
-﻿using TicketSystemWebApp.Mapping;
+﻿using TicketSystemWebApp.Helpers;
+using TicketSystemWebApp.Mapping;
 using TicketSystemWebApp.Models;
 
 namespace TicketSystemWebApp.Services
@@ -22,10 +23,16 @@ namespace TicketSystemWebApp.Services
         }
 
         // Retrieving data about selected user.
-        public async Task<UserViewModel> GetUserDataAsync(Guid userID)
+        public async Task<UserViewModel> GetUserDataAsync(string jwt)
         {
             using (HttpClient httpClient = new HttpClient())
             {
+                // Add JWT to HTTP header.
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+
+                // Get userID from JWT.
+                Guid userID = Jwt.GetObjectFromJwt<Guid>(jwt, "UserID");
+
                 // API client.
                 TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
 
@@ -38,10 +45,13 @@ namespace TicketSystemWebApp.Services
         }
 
         // Retrieving data about technicians.
-        public async Task<List<UserViewModel>> GetTechniciansAsync()
+        public async Task<List<UserViewModel>> GetTechniciansAsync(string jwt)
         {
             using (HttpClient httpClient = new HttpClient())
             {
+                // Add JWT to HTTP header.
+                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+
                 // API client.
                 TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
 

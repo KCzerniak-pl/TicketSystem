@@ -32,7 +32,7 @@ namespace TicketSystemWebApi.Controllers
                 Subject = new ClaimsIdentity(new[]
                 {
                     new Claim("UserID", user.UserID.ToString()),
-                    new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                    new Claim("UserName", string.Format("{0} {1}", user.FirstName, user.LastName)),
                     new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 }),
