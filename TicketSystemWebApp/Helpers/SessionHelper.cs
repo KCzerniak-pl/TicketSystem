@@ -49,11 +49,5 @@ namespace TicketSystemWebApp.Helpers
                 httpContext.Response.Cookies.Delete(cookieKey);
             }
         }
-
-        // Get data about authorization from session / cookies.
-        public static bool CheckAuthorization(HttpContext httpContext)
-        {
-            return SessionHelper.GetObjectFromJson<bool>(httpContext, "Authorization");
-        }
     }
 }

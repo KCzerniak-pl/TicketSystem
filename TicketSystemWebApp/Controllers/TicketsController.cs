@@ -27,7 +27,7 @@ namespace TicketSystemWebApp.Controllers
         public async Task<IActionResult> Index(int page = 1, int take = 15)
         {
             // Check autorization for this site.
-            if (!SessionHelper.CheckAuthorization(HttpContext))
+            if (!SessionHelper.GetObjectFromJson<bool>(HttpContext, "Authorization"))
             {
                 return RedirectToAction(nameof(AccountController.Login), "Account");
             }
@@ -68,7 +68,7 @@ namespace TicketSystemWebApp.Controllers
         public async Task<IActionResult> New()
         {
             // Check autorization for this site.
-            if (!SessionHelper.CheckAuthorization(HttpContext))
+            if (!SessionHelper.GetObjectFromJson<bool>(HttpContext, "Authorization"))
             {
                 return RedirectToAction(nameof(AccountController.Login), "Account", new { returnUrl = string.Format("/ticket/{0}", nameof(New)) });
             }
@@ -95,7 +95,7 @@ namespace TicketSystemWebApp.Controllers
         public async Task<IActionResult> Edit(Guid ticketID)
         {
             // Check autorization for this site.
-            if (!SessionHelper.CheckAuthorization(HttpContext))
+            if (!SessionHelper.GetObjectFromJson<bool>(HttpContext, "Authorization"))
             {
                 return RedirectToAction(nameof(AccountController.Login), "Account", new { returnUrl = string.Format("/ticket/{0}", nameof(Edit)) });
             }
@@ -149,7 +149,7 @@ namespace TicketSystemWebApp.Controllers
         public async Task<IActionResult> TicketNew(TicketNewViewModel ticket)
         {
             // Check autorization for this site.
-            if (!SessionHelper.CheckAuthorization(HttpContext))
+            if (!SessionHelper.GetObjectFromJson<bool>(HttpContext, "Authorization"))
             {
                 return RedirectToAction(nameof(AccountController.Login), "Account");
             }
@@ -175,7 +175,7 @@ namespace TicketSystemWebApp.Controllers
         public async Task<IActionResult> MessageNew(MessageNewViewModel message)
         {
             // Check autorization for this site.
-            if (!SessionHelper.CheckAuthorization(HttpContext))
+            if (!SessionHelper.GetObjectFromJson<bool>(HttpContext, "Authorization"))
             {
                 return RedirectToAction(nameof(AccountController.Login), "Account");
             }
@@ -197,7 +197,7 @@ namespace TicketSystemWebApp.Controllers
         public async Task<IActionResult> StatusUpdate(TicketStatusUpdateViewModel ticket, Guid? technicianID)
         {
             // Check autorization for this site.
-            if (!SessionHelper.CheckAuthorization(HttpContext))
+            if (!SessionHelper.GetObjectFromJson<bool>(HttpContext, "Authorization"))
             {
                 return RedirectToAction(nameof(AccountController.Login), "Account");
             }
@@ -228,7 +228,7 @@ namespace TicketSystemWebApp.Controllers
         public async Task<IActionResult> TitleUpdate(TicketTitleUpdateViewModel ticket)
         {
             // Check autorization for this site.
-            if (!SessionHelper.CheckAuthorization(HttpContext))
+            if (!SessionHelper.GetObjectFromJson<bool>(HttpContext, "Authorization"))
             {
                 return RedirectToAction(nameof(AccountController.Login), "Account");
             }
@@ -250,7 +250,7 @@ namespace TicketSystemWebApp.Controllers
         public async Task<IActionResult> CategoryUpdate(TicketCategoryUpdateViewModel ticket)
         {
             // Check autorization for this site.
-            if (!SessionHelper.CheckAuthorization(HttpContext))
+            if (!SessionHelper.GetObjectFromJson<bool>(HttpContext, "Authorization"))
             {
                 return RedirectToAction(nameof(AccountController.Login), "Account");
             }
@@ -272,7 +272,7 @@ namespace TicketSystemWebApp.Controllers
         public async Task<IActionResult> TechnicianUpdate(TicketTechnicianUpdateViewModel ticket)
         {
             // Check autorization for this site.
-            if (!SessionHelper.CheckAuthorization(HttpContext))
+            if (!SessionHelper.GetObjectFromJson<bool>(HttpContext, "Authorization"))
             {
                 return RedirectToAction(nameof(AccountController.Login), "Account");
             }
@@ -293,7 +293,7 @@ namespace TicketSystemWebApp.Controllers
         public async Task<IActionResult> DeleteTicket(Guid ticketID)
         {
             // Check autorization for this site.
-            if (!SessionHelper.CheckAuthorization(HttpContext))
+            if (!SessionHelper.GetObjectFromJson<bool>(HttpContext, "Authorization"))
             {
                 return RedirectToAction(nameof(AccountController.Login), "Account");
             }

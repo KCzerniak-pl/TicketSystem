@@ -20,8 +20,7 @@ namespace TicketSystemWebApp.Controllers
         public IActionResult Login(string? returnUrl = null)
         {
             // Check autorization for this site.
-            bool authorization = SessionHelper.GetObjectFromJson<bool>(HttpContext, "Authorization");
-            if (authorization)
+            if (SessionHelper.GetObjectFromJson<bool>(HttpContext, "Authorization"))
             {
                 return RedirectToAction(nameof(TicketsController.Index), "Tickets");
             }
