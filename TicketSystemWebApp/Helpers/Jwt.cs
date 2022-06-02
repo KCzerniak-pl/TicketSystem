@@ -16,5 +16,11 @@ namespace TicketSystemWebApp.Helpers
             TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
             return value == null ? default(T)! : (T)converter.ConvertFrom(value!)!;
         }
+
+        // Add JWT to HTTP header.
+        public  static void AddJwtToHeader(HttpClient httpClient, string jwt)
+        {
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace TicketSystemWebApp.Services
             using (HttpClient httpClient = new HttpClient())
             {
                 // Add JWT to HTTP header.
-                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+                Jwt.AddJwtToHeader(httpClient, jwt);
 
                 // Get userID from JWT.
                 Guid userID = Jwt.GetObjectFromJwt<Guid>(jwt, "UserID");
@@ -50,7 +50,7 @@ namespace TicketSystemWebApp.Services
             using (HttpClient httpClient = new HttpClient())
             {
                 // Add JWT to HTTP header.
-                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+                Jwt.AddJwtToHeader(httpClient, jwt);
 
                 // API client.
                 TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
