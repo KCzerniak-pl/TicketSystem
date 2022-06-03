@@ -1434,7 +1434,7 @@ namespace TicketSystemWebApp
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class LoginResponseDto
     {
-        [Newtonsoft.Json.JsonProperty("jwt", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("jwt", Required = Newtonsoft.Json.Required.AllowNull)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Jwt { get; set; }
 
