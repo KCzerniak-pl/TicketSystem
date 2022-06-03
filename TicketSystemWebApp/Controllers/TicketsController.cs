@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TicketSystemWebApp.Helpers;
 using TicketSystemWebApp.Models;
@@ -305,6 +306,19 @@ namespace TicketSystemWebApp.Controllers
             await _ticketsService.DeleteTicketAsync(jwt!, ticketID);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet("/error")]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            // Exception handler.
+            var exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+
+            // Error data.
+            var message = exceptionHandlerPathFeature?.Error.Message.Replace("\n", "<br/>") ?? "---";
+
+            return View(new ErrorViewModel { Message = message });
         }
     }
 }
