@@ -33,36 +33,11 @@ builder.Services.AddSwaggerGen(x =>
     x.OperationFilter<AuthResponsesOperationFilter>();
 });
 
-// JWT - section "appsettings.json" mapping to object "JwtConfig".
+// JWT - Get JWT configuration from "appsettings.json" and mapping this to object "JwtConfig".
 builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
 
 // JWT - Validate token.
-builder.Services.AddAuthentication(opt =>
-{
-    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; // Sets the default scheme to use when authenticating.   
-    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; // Sets the default scheme to use when challenging.   
-    opt.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; // Sets the default fallback scheme.
-})
-    // Authentication for JWT Bearer.
-    .AddJwtBearer(jwt =>
-    {
-        // Secret string used to sign and verify JWT tokens.
-        var key = Encoding.ASCII.GetBytes(builder.Configuration["JwtConfig:Secret"]);
-
-        // Token should be stored after a successful authorization.
-        jwt.SaveToken = true;
-
-        // Set of parameters that are used by validating a token.
-        jwt.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.FromMinutes(1)
-        };
-    });
+JwtAuthorizationExtension.AddJwtAuthorization(builder.Services);
 
 // Context for database connection (required references to the library "Database").
 string connectonString = builder.Configuration.GetConnectionString("TicketSystemDatabase");
@@ -72,7 +47,7 @@ builder.Services.AddDbContext<Database.CategoriesDbContext>(opt => opt.UseSqlSer
 builder.Services.AddDbContext<Database.StatusesDbContext>(opt => opt.UseSqlServer(connectonString));
 builder.Services.AddDbContext<Database.UsersDbContext>(opt => opt.UseSqlServer(connectonString));
 
-// Get email configuration from "appsettings.json" (equired references to the library "EmailService").
+// Get email configuration from "appsettings.json" and mapping this to object "EmailConfiguration" (required references to the library "EmailService").
 EmailConfiguration emailConfiguration = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();
 // Dependency injection (for email sending).
 builder.Services.AddSingleton(emailConfiguration);
