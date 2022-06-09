@@ -37,7 +37,6 @@
                 </thead>
                 <tbody>
                     @{
-                        int i = 1;
                         foreach (var ticket in Model)
                         {
                             <tr class="table-row" data-href="@Url.Action("edit", "ticket")/@ticket.TicketID">
@@ -47,21 +46,13 @@
                                 <td>@ticket.DateTimeModified.ToString("dd/MM/yyyy HH:mm:ss")</td>
                                 <td>@ticket.Title</td>
                                 <td>
-                                    @if (ticket.StatusID == new Guid(ViewBag.StatusNew))
+                                    @foreach (var status in (IEnumerable<string[]>)ViewData["statuses"]!)
                                     {
-                                        <span class="badge bg-warning">@ticket.StatusName</span>
-                                    }
-                                    else if (ticket.StatusID == new Guid(ViewBag.StatusAccept))
-                                    {
-                                        <span class="badge bg-success">@ticket.StatusName</span>
-                                    }
-                                    else if (ticket.StatusID == new Guid(ViewBag.StatusDiscard))
-                                    {
-                                        <span class="badge bg-danger">@ticket.StatusName</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-primary">@ticket.StatusName</span>
+                                        if (ticket.StatusID == new Guid(status.ElementAt(0)))
+                                        {
+                                            <span class="badge" style="background-color: @status.ElementAt(1)">@ticket.StatusName</span>
+                                            break;
+                                        }
                                     }
                                 </td>
                                 <td>@ticket.CategoryName</td>

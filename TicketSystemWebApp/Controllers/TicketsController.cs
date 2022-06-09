@@ -51,11 +51,9 @@ namespace TicketSystemWebApp.Controllers
                 TicketViewModel[] tickets = await _ticketsService.GetTicketsAsync(jwt!, (page - 1) * take, take, user.Role.ShowAll);
 
                 // Retrieving data about all statuses.
-                IEnumerable<string> statuses = _configuration.GetSection("Statuses:Guid").AsEnumerable().Where(p => p.Value != null).Select(p => p.Value).Reverse();
-
-                ViewBag.StatusNew = statuses.FirstOrDefault();
-                ViewBag.StatusAccept = statuses.Skip(1).FirstOrDefault();
-                ViewBag.StatusDiscard = statuses.Skip(2).FirstOrDefault();
+                IEnumerable<string[]> statuses = _configuration.GetSection("Statuses").Get<Dictionary<string, string[]>>().Select(p => p.Value);
+                
+                ViewData["statuses"] = statuses;
                 ViewBag.Page = page;
                 ViewBag.totalPages = (ticetsCount + take - 1) / take;
 
@@ -132,15 +130,13 @@ namespace TicketSystemWebApp.Controllers
                 ticket.TechnicianName = (ticket.TechnicianID is not null) ? technicians.Where(p => p.UserID == ticket.TechnicianID).Select(p => p.FirstName + " " + p.LastName).FirstOrDefault() : technicians.Select(p => p.FirstName + " " + p.LastName).FirstOrDefault();
             }
 
-            // Get statuses from "appsettings.json".
-            IEnumerable<string> statuses = _configuration.GetSection("Statuses:Guid").AsEnumerable().Where(p => p.Value != null).Select(p => p.Value).Reverse();
+            // Retrieving data about all statuses.
+            var statuses = _configuration.GetSection("Statuses").Get<Dictionary<string, string[]>>();
 
+            ViewData["statuses"] = statuses;
             ViewBag.CanAccepted = user.Role.CanAccepted;
             ViewBag.Categories = selectListItemForCategories;
             ViewBag.Technicians = selectListItemForTechnicians;
-            ViewBag.StatusNew = statuses.FirstOrDefault();
-            ViewBag.StatusAccept = statuses.Skip(1).Take(1).FirstOrDefault();
-            ViewBag.StatusDiscard = statuses.Skip(2).Take(1).FirstOrDefault();
 
             return View(ticket);
         }

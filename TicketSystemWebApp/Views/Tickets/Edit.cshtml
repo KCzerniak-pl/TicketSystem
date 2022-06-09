@@ -1,4 +1,7 @@
 ﻿@model TicketSystemWebApp.Models.TicketViewModel
+@{
+    var statuses = (Dictionary<string, string[]>)ViewData["statuses"]!;
+}
 
 <div id="ticketEdit" class="container mt-content border bg-light rounded-3 mb-9">
     <div class="row text-black-50 text-uppercase text-center">
@@ -19,21 +22,13 @@
             <dd class="col-12 col-sm-8 col-lg-10">@Model.DateTimeModified.ToString("dd/MM/yyyy HH:mm:ss")</dd>
             <dt class="col-12 col-sm-4 col-lg-2">Status:</dt>
             <dd class="col-12 col-sm-8 col-lg-10">
-                @if (Model.StatusID == new Guid(ViewBag.StatusNew))
+                @foreach (var status in statuses)
                 {
-                    <span class="badge bg-warning">@Model.StatusName</span>
-                }
-                else if (Model.StatusID == new Guid(ViewBag.StatusAccept))
-                {
-                    <span class="badge bg-success">@Model.StatusName</span>
-                }
-                else if (Model.StatusID == new Guid(ViewBag.StatusDiscard))
-                {
-                    <span class="badge bg-danger">@Model.StatusName</span>
-                }
-                else
-                {
-                    <span class="badge bg-primary">@Model.StatusName</span>
+                    if (Model.StatusID == new Guid(status.Value.ElementAt(0)))
+                    {
+                        <span class="badge" style="background-color: @status.Value.ElementAt(1)">@Model.StatusName</span>
+                        break;
+                    }
                 }
             </dd>
         </dl>
@@ -93,28 +88,23 @@
                     {
                         @Html.Hidden("ticketID", Model.TicketID)
                         @Html.Hidden("technicianID", Model.TechnicianID)
-
-                        if (Model.StatusID != new Guid(ViewBag.StatusAccept))
+                        foreach (var status in statuses)
                         {
-                            <li class="list-inline-item align-middle">
-                                <button type="submit" name="statusID" value="@ViewBag.StatusAccept" class="btn btn-success my-3">
-                                    <i class="fas fa-check me-1"></i>
-                                    Zaakceptuj zgłoszenie
-                                </button>
-                            </li>
-                        }
+                            if (Model.StatusID != new Guid(status.Value.ElementAt(0)) && (status.Key == "Accept" || status.Key == "Discard"))
+                            {
+                                string butonDesc = "";
+                                if (status.Key == "Accept") { butonDesc = "Zaakceptuj zgłoszenie"; }
+                                else if (status.Key == "Discard") { butonDesc = "Odrzuć zgłoszenie"; }
 
-                        if (Model.StatusID != new Guid(ViewBag.StatusDiscard))
-                        {
-                            <li class="list-inline-item align-middle">
-                                <button type="submit" name="statusID" value="@ViewBag.StatusDiscard" class="btn btn-danger my-3">
-                                    <i class="fas fa-times me-1"></i>
-                                    Odrzuć zgłoszenie
-                                </button>
-                            </li>
+                                <li class="list-inline-item align-middle">
+                                    <button type="submit" name="statusID" value="@status.Value.ElementAt(0)" class="btn text-white my-3" style="background-color: @status.Value.ElementAt(1);">
+                                        <i class="fas fa-check me-1"></i>
+                                        @butonDesc
+                                    </button>
+                                </li>
+                            }
                         }
                     }
-
                     <li class="list-inline-item my-3 align-middle">
                         <a href="@Url.Action("index", "tickets")" role="button" class="btn btn-primary">
                             <i class="fas fa-list me-1"></i>
