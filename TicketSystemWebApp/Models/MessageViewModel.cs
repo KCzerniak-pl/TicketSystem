@@ -2,14 +2,14 @@
 {
     public class MessagesViewModel
     {
-        public Guid MessageID { get; set; }
+        public Guid MessageId { get; set; }
 
-        public string Information { get; set; } = default!;
+        public string? Information { get; set; }
 
         public DateTimeOffset DateTimeCreated { get; set; }
 
-        public Guid UserID { get; set; }
+        public Guid UserId { get; set; }
 
-        public string UserName { get; set; } = default!;
+        public string? UserName { get; set; }
     }
 }

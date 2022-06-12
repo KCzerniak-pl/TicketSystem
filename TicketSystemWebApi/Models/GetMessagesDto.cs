@@ -5,18 +5,18 @@ namespace TicketSystemWebApi.Models
     public class GetMessagesDto
     {
         [Required]
-        public Guid MessageID { get; set; }
+        public Guid MessageId { get; set; }
 
         [Required]
-        public string Information { get; set; } = default!;
+        public string? Information { get; set; }
 
         [Required]
         public DateTimeOffset DateTimeCreated { get; set; }
 
         [Required]
-        public Guid UserID { get; set; }
+        public Guid UserId { get; set; }
 
         [Required]
-        public string UserName { get; set; } = default!;
+        public string? UserName { get; set; }
     }
 }

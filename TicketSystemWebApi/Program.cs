@@ -41,11 +41,7 @@ JwtAuthorizationExtension.AddJwtAuthorization(builder.Services);
 
 // Context for database connection (required references to the library "Database").
 string connectonString = builder.Configuration.GetConnectionString("TicketSystemDatabase");
-builder.Services.AddDbContext<Database.TicketsDbContext>(opt => opt.UseSqlServer(connectonString));
-builder.Services.AddDbContext<Database.MessagesDbContext>(opt => opt.UseSqlServer(connectonString));
-builder.Services.AddDbContext<Database.CategoriesDbContext>(opt => opt.UseSqlServer(connectonString));
-builder.Services.AddDbContext<Database.StatusesDbContext>(opt => opt.UseSqlServer(connectonString));
-builder.Services.AddDbContext<Database.UsersDbContext>(opt => opt.UseSqlServer(connectonString));
+builder.Services.AddDbContext<Database.TicketSystemDbContext>(opt => opt.UseSqlServer(connectonString));
 
 // Get email configuration from "appsettings.json" and mapping this to object "EmailConfiguration" (required references to the library "EmailService").
 EmailConfiguration emailConfiguration = builder.Configuration.GetSection("EmailConfiguration").Get<EmailConfiguration>();

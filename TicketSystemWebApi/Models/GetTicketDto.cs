@@ -5,19 +5,19 @@ namespace TicketSystemWebApi.Models
     public class GetTicketDto
     {
         [Required]
-        public Guid TicketID { get; set; }
+        public Guid TicketId { get; set; }
 
         [Required]
-        public Guid StatusID { get; set; }
+        public Guid StatusId { get; set; }
 
         [Required]
-        public string StatusName { get; set; } = default!;
+        public string? StatusName { get; set; }
 
         [Required]
-        public Guid CategoryID { get; set; }
+        public Guid CategoryId { get; set; }
 
         [Required]
-        public string CategoryName { get; set; } = default!;
+        public string? CategoryName { get; set; }
 
         [Required]
         public DateTimeOffset DateTimeCreated { get; set; }
@@ -26,19 +26,19 @@ namespace TicketSystemWebApi.Models
         public DateTimeOffset DateTimeModified { get; set; }
 
         [Required]
-        public string Title { get; set; } = default!;
+        public string? Title { get; set; }
 
         [Required]
-        public Guid UserID { get; set; }
+        public Guid UserId { get; set; }
 
         [Required]
-        public string UserName { get; set; } = default!;
+        public string? UserName { get; set; }
 
         [Required]
-        public string Email { get; set; } = default!;
+        public string? Email { get; set; }
 
-        public List<GetMessagesDto> Messages { get; set; } = default!;
+        public List<GetMessagesDto>? Messages { get; set; }
 
-        public Guid? TechnicianID { get; set; }
+        public Guid? TechnicianId { get; set; }
     }
 }

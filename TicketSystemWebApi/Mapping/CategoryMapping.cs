@@ -9,7 +9,7 @@ namespace TicketSystemWebApi.Mapping
         {
             GetCategoriesDto returnValue = new GetCategoriesDto();
 
-            returnValue.CategoryID = category.CategoryID;
+            returnValue.CategoryId = category.CategoryId;
             returnValue.Name = category.Name;
 
             return returnValue;

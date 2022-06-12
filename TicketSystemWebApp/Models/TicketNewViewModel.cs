@@ -4,10 +4,10 @@ namespace TicketSystemWebApp.Models
 {
     public class TicketNewViewModel
     {
-        public Guid CategoryID { get; set; }
+        public Guid CategoryId { get; set; }
 
-        public string Title { get; set; } = default!;
+        public string? Title { get; set; }
 
-        public string Information { get; set; } = default!;
+        public string? Information { get; set; }
     }
 }

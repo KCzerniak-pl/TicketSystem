@@ -5,12 +5,12 @@ namespace TicketSystemWebApi.Models
     public class LoginResponseDto
     {
         [Required]
-        public string Jwt { get; set; } = default!;
+        public string? Jwt { get; set; }
 
         [Required]
-        public bool Success { get; set; } = default!;
+        public bool Success { get; set; }
 
         [Required]
-        public string Error { get; set; } = default!;
+        public string? Error { get; set; }
     }
 }

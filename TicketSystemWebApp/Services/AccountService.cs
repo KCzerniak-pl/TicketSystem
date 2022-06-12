@@ -30,14 +30,14 @@ namespace TicketSystemWebApp.Services
                 // Add JWT to HTTP header.
                 Jwt.AddJwtToHeader(httpClient, jwt);
 
-                // Get userID from JWT.
-                Guid userID = Jwt.GetObjectFromJwt<Guid>(jwt, "UserID");
+                // Get userId from JWT.
+                Guid userId = Jwt.GetObjectFromJwt<Guid>(jwt, "UserId");
 
                 // API client.
                 TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
 
                 // Retrieving data about selected user (used service from TicketSystemWebApiClient).
-                GetUsersDto user = await apiClient.GetUserDataAsync(userID);
+                GetUsersDto user = await apiClient.GetUserDataAsync(userId);
 
                 // Mapping DTO to object used by the application - user.
                 return AccountMapping.GetUserFromDto(user);

@@ -5,9 +5,9 @@ namespace TicketSystemWebApi.Models
     public class GetCategoriesDto
     {
         [Required]
-        public Guid CategoryID { get; set; }
+        public Guid CategoryId { get; set; }
 
         [Required]
-        public string Name { get; set; } = default!;
+        public string? Name { get; set; }
     }
 }

@@ -4,8 +4,8 @@ namespace TicketSystemWebApp.Models
 {
     public class MessageNewViewModel
     {
-        public Guid TicketID { get; set; }
+        public Guid TicketId { get; set; }
 
-        public string Information { get; set; } = default!;
+        public string? Information { get; set; }
     }
 }

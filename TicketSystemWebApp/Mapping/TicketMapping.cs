@@ -9,19 +9,19 @@ namespace TicketSystemWebApp.Mapping
         {
             TicketViewModel returnValue = new TicketViewModel();
 
-            returnValue.TicketID = dto.TicketID;
-            returnValue.StatusID = dto.StatusID;
+            returnValue.TicketId = dto.TicketId;
+            returnValue.StatusId = dto.StatusId;
             returnValue.StatusName = dto.StatusName;
-            returnValue.CategoryID = dto.CategoryID;
+            returnValue.CategoryId = dto.CategoryId;
             returnValue.CategoryName = dto.CategoryName;
             returnValue.DateTimeCreated = dto.DateTimeCreated;
             returnValue.DateTimeModified = dto.DateTimeModified;
             returnValue.Title = dto.Title;
             returnValue.Messages = dto.Messages.Select(p => MessageMapping.GetMessagesFromDto(p)).ToList();
-            returnValue.UserID = dto.UserID;
+            returnValue.UserId = dto.UserId;
             returnValue.UserName = dto.UserName;
             returnValue.Email = dto.Email;
-            returnValue.TechnicianID = dto.TechnicianID;
+            returnValue.TechnicianId = dto.TechnicianId;
 
             return returnValue;
         }
@@ -31,9 +31,9 @@ namespace TicketSystemWebApp.Mapping
         {
             TicketViewModel returnValue = new TicketViewModel();
 
-            returnValue.TicketID = dto.TicketID;
+            returnValue.TicketId = dto.TicketId;
             returnValue.No = dto.No;
-            returnValue.StatusID = dto.StatusID;
+            returnValue.StatusId = dto.StatusId;
             returnValue.StatusName = dto.StatusName;
             returnValue.CategoryName = dto.CategoryName;
             returnValue.DateTimeCreated = dto.DateTimeCreated;
@@ -45,12 +45,12 @@ namespace TicketSystemWebApp.Mapping
         }
 
         // Mapping data to DTO - new ticket.
-        internal static PostTicketDto PostTicketToDto(TicketNewViewModel ticket, Guid userID)
+        internal static PostTicketDto PostTicketToDto(TicketNewViewModel ticket, Guid userId)
         {
             PostTicketDto returnValue = new PostTicketDto();
 
-            returnValue.UserID = userID;
-            returnValue.CategoryID = ticket.CategoryID;
+            returnValue.UserId = userId;
+            returnValue.CategoryId = ticket.CategoryId;
             returnValue.Title = ticket.Title;
             returnValue.Information = ticket.Information;
 
@@ -58,61 +58,61 @@ namespace TicketSystemWebApp.Mapping
         }
 
         // Mapping data to DTO - update status.
-        internal static PutTicketStatusDto PutTicketStatusToDto(TicketStatusUpdateViewModel ticket, Guid userID, Guid technicianID)
+        internal static PutTicketStatusDto PutTicketStatusToDto(TicketStatusUpdateViewModel ticket, Guid userId, Guid technicianId)
         {
             PutTicketStatusDto returnValue = new PutTicketStatusDto();
 
-            returnValue.UserID = userID;
-            returnValue.TicketID = ticket.TicketID;
-            returnValue.StatusID = ticket.StatusID;
-            returnValue.TechnicianID = technicianID;
+            returnValue.UserId = userId;
+            returnValue.TicketId = ticket.TicketId;
+            returnValue.StatusId = ticket.StatusId;
+            returnValue.TechnicianId = technicianId;
 
             return returnValue;
         }
 
         // Mapping data to DTO - update title.
-        internal static PutTicketTitleDto PutTicketTitleToDto(TicketTitleUpdateViewModel ticket, Guid userID)
+        internal static PutTicketTitleDto PutTicketTitleToDto(TicketTitleUpdateViewModel ticket, Guid userId)
         {
             PutTicketTitleDto returnValue = new PutTicketTitleDto();
 
-            returnValue.UserID = userID;
-            returnValue.TicketID = ticket.TicketID;
+            returnValue.UserId = userId;
+            returnValue.TicketId = ticket.TicketId;
             returnValue.Title = ticket.Title;
 
             return returnValue;
         }
 
         // Mapping data to DTO - update category.
-        internal static PutTicketCategoryDto PutTicketCategoryToDto(TicketCategoryUpdateViewModel ticket, Guid userID)
+        internal static PutTicketCategoryDto PutTicketCategoryToDto(TicketCategoryUpdateViewModel ticket, Guid userId)
         {
             PutTicketCategoryDto returnValue = new PutTicketCategoryDto();
 
-            returnValue.UserID = userID;
-            returnValue.TicketID = ticket.TicketID;
-            returnValue.CategoryID = ticket.CategoryID;
+            returnValue.UserId = userId;
+            returnValue.TicketId = ticket.TicketId;
+            returnValue.CategoryId = ticket.CategoryId;
 
             return returnValue;
         }
 
         // Mapping data to DTO - update technician.
-        internal static PutTicketTechnicianDto PutTicketTechnicianToDto(TicketTechnicianUpdateViewModel ticket, Guid userID)
+        internal static PutTicketTechnicianDto PutTicketTechnicianToDto(TicketTechnicianUpdateViewModel ticket, Guid userId)
         {
             PutTicketTechnicianDto returnValue = new PutTicketTechnicianDto();
 
-            returnValue.UserID = userID;
-            returnValue.TicketID = ticket.TicketID;
-            returnValue.TechnicianID = ticket.TechnicianID;
+            returnValue.UserId = userId;
+            returnValue.TicketId = ticket.TicketId;
+            returnValue.TechnicianId = ticket.TechnicianId;
 
             return returnValue;
         }
 
         // Mapping data to DTO - delete ticket.
-        internal static DeleteTicketDto DeleteTicketToDto(Guid ticketID, Guid userID)
+        internal static DeleteTicketDto DeleteTicketToDto(Guid ticketId, Guid userId)
         {
             DeleteTicketDto returnValue = new DeleteTicketDto();
 
-            returnValue.UserID = userID;
-            returnValue.TicketID = ticketID;
+            returnValue.UserId = userId;
+            returnValue.TicketId = ticketId;
 
             return returnValue;
         }

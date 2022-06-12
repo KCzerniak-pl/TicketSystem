@@ -9,7 +9,7 @@ namespace Database.Entities
         [Key]
         [Column(TypeName = "uniqueidentifier")]
         [Required]
-        public Guid TicketID { get; set; } = default!;
+        public Guid TicketId { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Required]
@@ -17,36 +17,36 @@ namespace Database.Entities
 
         [Column(TypeName = "uniqueidentifier")]
         [Required]
-        public Guid OwnerID { get; set; } = default!;
+        public Guid OwnerId { get; set; }
 
         [Column(TypeName = "uniqueidentifier")]
-        public System.Nullable<Guid> TechnicianID { get; set; }
-
-        [Column(TypeName = "uniqueidentifier")]
-        [Required]
-        public Guid StatusID { get; set; } = default!;
+        public Guid? TechnicianId { get; set; }
 
         [Column(TypeName = "uniqueidentifier")]
         [Required]
-        public Guid CategoryID { get; set; } = default!;
+        public Guid StatusId { get; set; }
+
+        [Column(TypeName = "uniqueidentifier")]
+        [Required]
+        public Guid CategoryId { get; set; }
 
         [Column(TypeName = "datetimeoffset(0)")]
         [Required]
-        public DateTimeOffset DateTimeCreated { get; set; } = default!;
+        public DateTimeOffset DateTimeCreated { get; set; }
 
         [Column(TypeName = "datetimeoffset(0)")]
         [Required]
-        public DateTimeOffset DateTimeModified { get; set; } = default!;
+        public DateTimeOffset DateTimeModified { get; set; }
 
         [Column(TypeName = "nvarchar(75)")]
         [Required]
-        public string Title { get; set; } = default!;
+        public string? Title { get; set; }
 
         // Relationships one-to-many.
-        public User Owner { get; set; } = default!;
-        public User Technician { get; set; } = default!;
-        public Status Status { get; set; } = default!;
-        public Category Category { get; set; } = default!;
-        public ICollection<Message> Messages { get; set; } = default!;
+        public virtual User? Owner { get; set; }
+        public virtual User? Technician { get; set; }
+        public virtual Status? Status { get; set; }
+        public virtual Category? Category { get; set; }
+        public virtual ICollection<Message>? Messages { get; set; }
     }
 }

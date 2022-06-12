@@ -9,26 +9,26 @@ namespace Database.Entities
         [Key]
         [Column(TypeName = "uniqueidentifier")]
         [Required]
-        public Guid MessageID { get; set; } = default!;
+        public Guid MessageId { get; set; }
 
         [Required]
-        public Guid TicketID { get; set; } = default!;
+        public Guid TicketId { get; set; }
 
         [Column(TypeName = "uniqueidentifier")]
         [Required]
-        public Guid OwnerID { get; set; } = default!;
+        public Guid OwnerId { get; set; }
 
         [Column(TypeName = "nvarchar(max)")]
         [Required]
-        public string Information { get; set; } = default!;
+        public string? Information { get; set; }
 
         [Column(TypeName = "datetimeoffset(0)")]
         [Required]
-        public DateTimeOffset DateTimeCreated { get; set; } = default!;
+        public DateTimeOffset DateTimeCreated { get; set; }
 
         // Relationships one-to-many.
-        public Ticket Ticket { get; set; } = default!;
+        public virtual Ticket? Ticket { get; set; }
 
-        public User Owner { get; set; } = default!;
+        public virtual User? Owner { get; set; }
     }
 }

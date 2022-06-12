@@ -2,8 +2,8 @@
 {
     public class TicketTechnicianUpdateViewModel
     {
-        public Guid TicketID { get; set; }
+        public Guid TicketId { get; set; }
 
-        public Guid TechnicianID { get; set; }
+        public Guid TechnicianId { get; set; }
     }
 }

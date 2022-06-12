@@ -62,7 +62,7 @@
 						<td class="header">ID:</td>					
 					</tr>
 					<tr>
-						<td class="value">{ticket.TicketID}</td>					
+						<td class="value">{ticket.TicketId}</td>					
 					</tr>
 				</table>
 
@@ -107,7 +107,7 @@
 						<td class="header">Link:</td>
 					</tr>
 					<tr>
-						<td class="value">https://localhost:7230/ticket/edit/{ticket.TicketID}</td>
+						<td class="value">https://localhost:7230/ticket/edit/{ticket.TicketId}</td>
 					</tr>				
 				</table>			
 			</td>

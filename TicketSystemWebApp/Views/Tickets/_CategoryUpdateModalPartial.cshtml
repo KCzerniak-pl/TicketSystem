@@ -10,10 +10,10 @@
                 </div>
                 <div class="modal-body">
                     <div>
-                        @Html.DropDownListFor(x => x.CategoryID, ViewBag.Categories as IEnumerable<SelectListItem>, new { @class = "form-select shadow-none" })
+                        @Html.DropDownListFor(x => x.CategoryId, ViewBag.Categories as IEnumerable<SelectListItem>, new { @class = "form-select shadow-none" })
                     </div>
                     <div>
-                        @Html.Hidden("ticketID", Model.TicketID)
+                        @Html.Hidden("ticketId", Model.TicketId)
                     </div>
                 </div>
                 <div class="modal-footer">

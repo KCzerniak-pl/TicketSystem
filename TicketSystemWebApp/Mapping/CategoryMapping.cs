@@ -9,7 +9,7 @@ namespace TicketSystemWebApp.Mapping
         {
             CategoryViewModel returnValue = new CategoryViewModel();
 
-            returnValue.CategoryID = dto.CategoryID;
+            returnValue.CategoryId = dto.CategoryId;
             returnValue.Name = dto.Name;
 
             return returnValue;

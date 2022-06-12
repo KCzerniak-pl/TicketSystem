@@ -9,13 +9,13 @@ namespace Database.Entities
         [Key]
         [Column(TypeName = "uniqueidentifier")]
         [Required]
-        public Guid CategoryID { get; set; } = default!;
+        public Guid CategoryId { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
         [Required]
-        public string Name { get; set; } = default!;
+        public string? Name { get; set; }
 
         // Relationships one-to-many.
-        public ICollection<Ticket> Tickets { get; set; } = default!;
+        public virtual ICollection<Ticket>? Tickets { get; set; }
     }
 }

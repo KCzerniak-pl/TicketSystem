@@ -13,31 +13,31 @@ namespace Database.Migrations.TicketsMigrations
                 name: "Categories",
                 columns: table => new
                 {
-                    CategoryID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.CategoryID);
+                    table.PrimaryKey("PK_Categories", x => x.CategoryId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Statuses",
                 columns: table => new
                 {
-                    StatusID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    StatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Statuses", x => x.StatusID);
+                    table.PrimaryKey("PK_Statuses", x => x.StatusId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "UserRoles",
                 columns: table => new
                 {
-                    RoleID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RoleName = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     ShowAll = table.Column<bool>(type: "bit", nullable: false),
                     CanAccepted = table.Column<bool>(type: "bit", nullable: false),
@@ -45,133 +45,130 @@ namespace Database.Migrations.TicketsMigrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRoles", x => x.RoleID);
+                    table.PrimaryKey("PK_UserRoles", x => x.RoleId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
-                    UserID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    RoleID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateTimeCreated = table.Column<DateTimeOffset>(type: "datetimeoffset(0)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.UserID);
+                    table.PrimaryKey("PK_Users", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_Users_UserRoles_RoleID",
-                        column: x => x.RoleID,
+                        name: "FK_Users_UserRoles_RoleId",
+                        column: x => x.RoleId,
                         principalTable: "UserRoles",
-                        principalColumn: "RoleID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "RoleId");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Tickets",
                 columns: table => new
                 {
-                    TicketID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TicketId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     No = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OwnerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TechnicianID = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    StatusID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CategoryID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TechnicianId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    StatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DateTimeCreated = table.Column<DateTimeOffset>(type: "datetimeoffset(0)", nullable: false),
                     DateTimeModified = table.Column<DateTimeOffset>(type: "datetimeoffset(0)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(75)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tickets", x => x.TicketID);
+                    table.PrimaryKey("PK_Tickets", x => x.TicketId);
                     table.ForeignKey(
-                        name: "FK_Tickets_Categories_CategoryID",
-                        column: x => x.CategoryID,
+                        name: "FK_Tickets_Categories_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "CategoryID");
+                        principalColumn: "CategoryId");
                     table.ForeignKey(
-                        name: "FK_Tickets_Statuses_StatusID",
-                        column: x => x.StatusID,
+                        name: "FK_Tickets_Statuses_StatusId",
+                        column: x => x.StatusId,
                         principalTable: "Statuses",
-                        principalColumn: "StatusID");
+                        principalColumn: "StatusId");
                     table.ForeignKey(
-                        name: "FK_Tickets_Users_OwnerID",
-                        column: x => x.OwnerID,
+                        name: "FK_Tickets_Users_OwnerId",
+                        column: x => x.OwnerId,
                         principalTable: "Users",
-                        principalColumn: "UserID");
+                        principalColumn: "UserId");
                     table.ForeignKey(
-                        name: "FK_Tickets_Users_TechnicianID",
-                        column: x => x.TechnicianID,
+                        name: "FK_Tickets_Users_TechnicianId",
+                        column: x => x.TechnicianId,
                         principalTable: "Users",
-                        principalColumn: "UserID");
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Messages",
                 columns: table => new
                 {
-                    MessageID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TicketID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    OwnerID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MessageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TicketId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Information = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateTimeCreated = table.Column<DateTimeOffset>(type: "datetimeoffset(0)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Messages", x => x.MessageID);
+                    table.PrimaryKey("PK_Messages", x => x.MessageId);
                     table.ForeignKey(
-                        name: "FK_Messages_Tickets_TicketID",
-                        column: x => x.TicketID,
+                        name: "FK_Messages_Tickets_TicketId",
+                        column: x => x.TicketId,
                         principalTable: "Tickets",
-                        principalColumn: "TicketID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "TicketId");
                     table.ForeignKey(
-                        name: "FK_Messages_Users_OwnerID",
-                        column: x => x.OwnerID,
+                        name: "FK_Messages_Users_OwnerId",
+                        column: x => x.OwnerId,
                         principalTable: "Users",
-                        principalColumn: "UserID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "UserId");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_OwnerID",
+                name: "IX_Messages_OwnerId",
                 table: "Messages",
-                column: "OwnerID");
+                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_TicketID",
+                name: "IX_Messages_TicketId",
                 table: "Messages",
-                column: "TicketID");
+                column: "TicketId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_CategoryID",
+                name: "IX_Tickets_CategoryId",
                 table: "Tickets",
-                column: "CategoryID");
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_OwnerID",
+                name: "IX_Tickets_OwnerId",
                 table: "Tickets",
-                column: "OwnerID");
+                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_StatusID",
+                name: "IX_Tickets_StatusId",
                 table: "Tickets",
-                column: "StatusID");
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_TechnicianID",
+                name: "IX_Tickets_TechnicianId",
                 table: "Tickets",
-                column: "TechnicianID");
+                column: "TechnicianId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_RoleID",
+                name: "IX_Users_RoleId",
                 table: "Users",
-                column: "RoleID");
+                column: "RoleId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

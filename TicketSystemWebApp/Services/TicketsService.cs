@@ -20,11 +20,11 @@ namespace TicketSystemWebApp.Services
                 // API client.
                 TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
 
-                // Get userID from JWT.
-                Guid userID = Jwt.GetObjectFromJwt<Guid>(jwt, "UserID");
+                // Get userId from JWT.
+                Guid userId = Jwt.GetObjectFromJwt<Guid>(jwt, "UserId");
 
                 // Retrieving data about all tickets or all tickets for selected user (used service from TicketSystemWebApiClient).
-                IEnumerable<GetTicketsDto> tickets = await apiClient.GetTicketsAsync(skip, take, !showAll ? userID : default);
+                IEnumerable<GetTicketsDto> tickets = await apiClient.GetTicketsAsync(skip, take, showAll ? null : userId);
 
                 // Mapping DTO to object used by the application - tickets.
                 return tickets.Select(dto => TicketMapping.GetTicketsFromDto(dto)).ToArray();
@@ -42,16 +42,16 @@ namespace TicketSystemWebApp.Services
                 // API client.
                 TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
 
-                // Get userID from JWT.
-                Guid userID = Jwt.GetObjectFromJwt<Guid>(jwt, "UserID");
+                // Get userId from JWT.
+                Guid userId = Jwt.GetObjectFromJwt<Guid>(jwt, "UserId");
 
                 // Retrieving count about all ticket or only ticket for selected user (used service from TicketSystemWebApiClient).
-                return await apiClient.GetTicketsCountAsync(!showAll ? userID : default);
+                return await apiClient.GetTicketsCountAsync(showAll ? null : userId);
             }
         }
 
         // Retrieving data about selected ticket.
-        public async Task<TicketViewModel> GetTicketAsync(string jwt, Guid ticketID)
+        public async Task<TicketViewModel> GetTicketAsync(string jwt, Guid ticketId)
         {
             using (HttpClient httpClient = new HttpClient())
             {
@@ -61,11 +61,11 @@ namespace TicketSystemWebApp.Services
                 // API client.
                 TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
 
-                // Get userID from JWT.
-                Guid userID = Jwt.GetObjectFromJwt<Guid>(jwt, "UserID");
+                // Get userId from JWT.
+                Guid userId = Jwt.GetObjectFromJwt<Guid>(jwt, "UserId");
 
                 // Retrieving data about selected ticket (used service from TicketSystemWebApiClient).
-                GetTicketDto ticket = await apiClient.GetTicketAsync(ticketID, userID);
+                GetTicketDto ticket = await apiClient.GetTicketAsync(ticketId, userId);
 
                 // Mapping DTO to object used by the application - selected ticket.
                 return TicketMapping.GetTicketFromDto(ticket);
@@ -102,11 +102,11 @@ namespace TicketSystemWebApp.Services
                 // API client.
                 TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
 
-                // Get userID from JWT.
-                Guid userID = Jwt.GetObjectFromJwt<Guid>(jwt, "UserID");
+                // Get userId from JWT.
+                Guid userId = Jwt.GetObjectFromJwt<Guid>(jwt, "UserId");
 
                 // Mapping data to DTO and add new ticket (used service from TicketSystemWebApiClient).
-                await apiClient.PostTicketAsync(TicketMapping.PostTicketToDto(ticket, userID));
+                await apiClient.PostTicketAsync(TicketMapping.PostTicketToDto(ticket, userId));
             }
         }
 
@@ -121,16 +121,16 @@ namespace TicketSystemWebApp.Services
                 // API client.
                 TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
 
-                // Get userID from JWT.
-                Guid userID = Jwt.GetObjectFromJwt<Guid>(jwt, "UserID");
+                // Get userId from JWT.
+                Guid userId = Jwt.GetObjectFromJwt<Guid>(jwt, "UserId");
 
                 // Mapping data to DTO and add new message for selected ticket (used service from TicketSystemWebApiClient).
-                await apiClient.PostMessageAsync(MessageMapping.PostMessageToDto(message, userID));
+                await apiClient.PostMessageAsync(MessageMapping.PostMessageToDto(message, userId));
             }
         }
 
         // Update status for ticket.
-        public async Task PutTicketStatusAsync(string jwt, TicketStatusUpdateViewModel ticket, Guid technicianID)
+        public async Task PutTicketStatusAsync(string jwt, TicketStatusUpdateViewModel ticket, Guid technicianId)
         {
             using (HttpClient httpClient = new HttpClient())
             {
@@ -140,11 +140,11 @@ namespace TicketSystemWebApp.Services
                 // API client.
                 TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
 
-                // Get userID from JWT.
-                Guid userID = Jwt.GetObjectFromJwt<Guid>(jwt, "UserID");
+                // Get userId from JWT.
+                Guid userId = Jwt.GetObjectFromJwt<Guid>(jwt, "UserId");
 
                 // Mapping data to DTO and update status for ticket (used service from TicketSystemWebApiClient).
-                await apiClient.PutTicketStatusAsync(TicketMapping.PutTicketStatusToDto(ticket, userID, technicianID));
+                await apiClient.PutTicketStatusAsync(TicketMapping.PutTicketStatusToDto(ticket, userId, technicianId));
             }
         }
 
@@ -159,11 +159,11 @@ namespace TicketSystemWebApp.Services
                 // API client.
                 TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
 
-                // Get userID from JWT.
-                Guid userID = Jwt.GetObjectFromJwt<Guid>(jwt, "UserID");
+                // Get userId from JWT.
+                Guid userId = Jwt.GetObjectFromJwt<Guid>(jwt, "UserId");
 
                 // Mapping data to DTO and update title for ticket (used service from TicketSystemWebApiClient).
-                await apiClient.PutTicketTitleAsync(TicketMapping.PutTicketTitleToDto(ticket, userID));
+                await apiClient.PutTicketTitleAsync(TicketMapping.PutTicketTitleToDto(ticket, userId));
             }
         }
 
@@ -178,11 +178,11 @@ namespace TicketSystemWebApp.Services
                 // API client
                 TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
 
-                // Get userID from JWT.
-                Guid userID = Jwt.GetObjectFromJwt<Guid>(jwt, "UserID");
+                // Get userId from JWT.
+                Guid userId = Jwt.GetObjectFromJwt<Guid>(jwt, "UserId");
 
                 // Mapping data to DTO and update category for ticket (used service from TicketSystemWebApiClient).
-                await apiClient.PutTicketCategoryAsync(TicketMapping.PutTicketCategoryToDto(ticket, userID));
+                await apiClient.PutTicketCategoryAsync(TicketMapping.PutTicketCategoryToDto(ticket, userId));
             }
         }
 
@@ -197,16 +197,16 @@ namespace TicketSystemWebApp.Services
                 // API client
                 TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
 
-                // Get userID from JWT.
-                Guid userID = Jwt.GetObjectFromJwt<Guid>(jwt, "UserID");
+                // Get userId from JWT.
+                Guid userId = Jwt.GetObjectFromJwt<Guid>(jwt, "UserId");
 
                 // Mapping data to DTO and update category for ticket (used service from TicketSystemWebApiClient).
-                await apiClient.PutTicketTechnicianAsync(TicketMapping.PutTicketTechnicianToDto(ticket, userID));
+                await apiClient.PutTicketTechnicianAsync(TicketMapping.PutTicketTechnicianToDto(ticket, userId));
             }
         }
 
         // Delete ticket.
-        public async Task DeleteTicketAsync(string jwt, Guid ticketID)
+        public async Task DeleteTicketAsync(string jwt, Guid ticketId)
         {
             using (HttpClient httpClient = new HttpClient())
             {
@@ -216,11 +216,11 @@ namespace TicketSystemWebApp.Services
                 // API client.
                 TicketSystemWebApiClient apiClient = new TicketSystemWebApiClient(_url, httpClient);
 
-                // Get userID from JWT.
-                Guid userID = Jwt.GetObjectFromJwt<Guid>(jwt, "UserID");
+                // Get userId from JWT.
+                Guid userId = Jwt.GetObjectFromJwt<Guid>(jwt, "UserId");
 
                 // Mapping data to DTO and delete ticket (used service from TicketSystemWebApiClient).
-                await apiClient.DeleteTicketAsync(TicketMapping.DeleteTicketToDto(ticketID, userID));
+                await apiClient.DeleteTicketAsync(TicketMapping.DeleteTicketToDto(ticketId, userId));
             }
         }
     }

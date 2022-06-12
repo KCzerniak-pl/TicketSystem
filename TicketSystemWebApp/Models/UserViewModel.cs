@@ -2,16 +2,16 @@
 {
     public class UserViewModel
     {
-        public Guid UserID { get; set; }
+        public Guid UserId { get; set; }
 
-        public string FirstName { get; set; } = default!;
+        public string? FirstName { get; set; }
 
-        public string LastName { get; set; } = default!;
+        public string? LastName { get; set; }
 
-        public string Email { get; set; } = default!;
+        public string? Email { get; set; }
 
-        public RoleViewModel Role { get; set; } = default!;
+        public RoleViewModel? Role { get; set; }
 
-        public string DateTimeCreated { get; set; } = default!;
+        public string? DateTimeCreated { get; set; }
     }
 }

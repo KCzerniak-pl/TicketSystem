@@ -9,14 +9,14 @@ namespace TicketSystemWebApp.Mapping
         {
             UserViewModel returnValue = new UserViewModel();
 
-            returnValue.UserID = dto.UserID;
+            returnValue.UserId = dto.UserId;
             returnValue.FirstName = dto.FirstName;
             returnValue.LastName = dto.LastName;
             returnValue.Email = dto.Email;
             returnValue.DateTimeCreated = dto.DateTimeCreated.ToString("dd/MM/yyyy HH:mm:ss");
             returnValue.Role = new RoleViewModel()
             {
-                RoleID = dto.Role.RoleID,
+                RoleId = dto.Role.RoleId,
                 RoleName = dto.Role.RoleName,
                 ShowAll = dto.Role.ShowAll,
                 CanAccepted = dto.Role.CanAccepted
@@ -30,7 +30,7 @@ namespace TicketSystemWebApp.Mapping
         {
             UserViewModel returnValue = new UserViewModel();
 
-            returnValue.UserID = dto.UserID;
+            returnValue.UserId = dto.UserId;
             returnValue.FirstName = dto.FirstName;
             returnValue.LastName = dto.LastName;
 
@@ -42,7 +42,7 @@ namespace TicketSystemWebApp.Mapping
         {
             RoleViewModel returnValue = new RoleViewModel();
 
-            returnValue.RoleID = message.RoleID;
+            returnValue.RoleId = message.RoleId;
             returnValue.RoleName = message.RoleName;
             returnValue.CanAccepted = message.CanAccepted;
 

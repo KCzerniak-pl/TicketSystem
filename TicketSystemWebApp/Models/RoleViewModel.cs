@@ -2,9 +2,9 @@
 {
     public class RoleViewModel
     {
-        public Guid RoleID { get; set; }
+        public Guid RoleId { get; set; }
 
-        public string RoleName { get; set; } = default!;
+        public string? RoleName { get; set; }
 
         public bool ShowAll { get; set; }
 

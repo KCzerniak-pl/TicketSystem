@@ -10,21 +10,21 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Database.Migrations.TicketsMigrations
 {
-    [DbContext(typeof(TicketsDbContext))]
-    partial class TicketsDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(TicketSystemDbContext))]
+    partial class TicketSystemDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.3")
+                .HasAnnotation("ProductVersion", "6.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("Database.Entities.Category", b =>
                 {
-                    b.Property<Guid>("CategoryID")
+                    b.Property<Guid>("CategoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -32,14 +32,14 @@ namespace Database.Migrations.TicketsMigrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("CategoryID");
+                    b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Database.Entities.Message", b =>
                 {
-                    b.Property<Guid>("MessageID")
+                    b.Property<Guid>("MessageId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -50,24 +50,24 @@ namespace Database.Migrations.TicketsMigrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("OwnerID")
+                    b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("TicketID")
+                    b.Property<Guid>("TicketId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("MessageID");
+                    b.HasKey("MessageId");
 
-                    b.HasIndex("OwnerID");
+                    b.HasIndex("OwnerId");
 
-                    b.HasIndex("TicketID");
+                    b.HasIndex("TicketId");
 
                     b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Database.Entities.Status", b =>
                 {
-                    b.Property<Guid>("StatusID")
+                    b.Property<Guid>("StatusId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -75,18 +75,18 @@ namespace Database.Migrations.TicketsMigrations
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("StatusID");
+                    b.HasKey("StatusId");
 
                     b.ToTable("Statuses");
                 });
 
             modelBuilder.Entity("Database.Entities.Ticket", b =>
                 {
-                    b.Property<Guid>("TicketID")
+                    b.Property<Guid>("TicketId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CategoryID")
+                    b.Property<Guid>("CategoryId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("DateTimeCreated")
@@ -101,35 +101,35 @@ namespace Database.Migrations.TicketsMigrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("No"), 1L, 1);
 
-                    b.Property<Guid>("OwnerID")
+                    b.Property<Guid>("OwnerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("StatusID")
+                    b.Property<Guid>("StatusId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("TechnicianID")
+                    b.Property<Guid?>("TechnicianId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(75)");
 
-                    b.HasKey("TicketID");
+                    b.HasKey("TicketId");
 
-                    b.HasIndex("CategoryID");
+                    b.HasIndex("CategoryId");
 
-                    b.HasIndex("OwnerID");
+                    b.HasIndex("OwnerId");
 
-                    b.HasIndex("StatusID");
+                    b.HasIndex("StatusId");
 
-                    b.HasIndex("TechnicianID");
+                    b.HasIndex("TechnicianId");
 
                     b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("Database.Entities.User", b =>
                 {
-                    b.Property<Guid>("UserID")
+                    b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -152,19 +152,19 @@ namespace Database.Migrations.TicketsMigrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("RoleID")
+                    b.Property<Guid>("RoleId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("UserID");
+                    b.HasKey("UserId");
 
-                    b.HasIndex("RoleID");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Database.Entities.UserRole", b =>
                 {
-                    b.Property<Guid>("RoleID")
+                    b.Property<Guid>("RoleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -181,7 +181,7 @@ namespace Database.Migrations.TicketsMigrations
                     b.Property<bool>("Technician")
                         .HasColumnType("bit");
 
-                    b.HasKey("RoleID");
+                    b.HasKey("RoleId");
 
                     b.ToTable("UserRoles");
                 });
@@ -190,14 +190,14 @@ namespace Database.Migrations.TicketsMigrations
                 {
                     b.HasOne("Database.Entities.User", "Owner")
                         .WithMany("Messages")
-                        .HasForeignKey("OwnerID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("Database.Entities.Ticket", "Ticket")
                         .WithMany("Messages")
-                        .HasForeignKey("TicketID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -209,25 +209,25 @@ namespace Database.Migrations.TicketsMigrations
                 {
                     b.HasOne("Database.Entities.Category", "Category")
                         .WithMany("Tickets")
-                        .HasForeignKey("CategoryID")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("Database.Entities.User", "Owner")
                         .WithMany("OwnerTickets")
-                        .HasForeignKey("OwnerID")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("Database.Entities.Status", "Status")
                         .WithMany("Tickets")
-                        .HasForeignKey("StatusID")
+                        .HasForeignKey("StatusId")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("Database.Entities.User", "Technician")
                         .WithMany("TechnicianTickets")
-                        .HasForeignKey("TechnicianID");
+                        .HasForeignKey("TechnicianId");
 
                     b.Navigation("Category");
 
@@ -242,8 +242,8 @@ namespace Database.Migrations.TicketsMigrations
                 {
                     b.HasOne("Database.Entities.UserRole", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.Navigation("Role");

@@ -15,7 +15,7 @@
     <div class="row mt-3 text-black-50">
         <dl class="row">
             <dt class="col-12 col-sm-4 col-lg-2">Identyfikator:</dt>
-            <dd class="col-12 col-sm-8 col-lg-10">@Model.TicketID</dd>
+            <dd class="col-12 col-sm-8 col-lg-10">@Model.TicketId</dd>
             <dt class="col-12 col-sm-4 col-lg-2">Data utworzenia:</dt>
             <dd class="col-12 col-sm-8 col-lg-10">@Model.DateTimeCreated.ToString("dd/MM/yyyy HH:mm:ss")</dd>
             <dt class="col-12 col-sm-4 col-lg-2">Data zmiany:</dt>
@@ -24,7 +24,7 @@
             <dd class="col-12 col-sm-8 col-lg-10">
                 @foreach (var status in statuses)
                 {
-                    if (Model.StatusID == new Guid(status.Value.ElementAt(0)))
+                    if (Model.StatusId == new Guid(status.Value.ElementAt(0)))
                     {
                         <span class="badge" style="background-color: @status.Value.ElementAt(1)">@Model.StatusName</span>
                         break;
@@ -86,18 +86,18 @@
                 {
                     @if (ViewBag.CanAccepted)
                     {
-                        @Html.Hidden("ticketID", Model.TicketID)
-                        @Html.Hidden("technicianID", Model.TechnicianID)
+                        @Html.Hidden("ticketId", Model.TicketId)
+                        @Html.Hidden("technicianId", Model.TechnicianId)
                         foreach (var status in statuses)
                         {
-                            if (Model.StatusID != new Guid(status.Value.ElementAt(0)) && (status.Key == "Accept" || status.Key == "Discard"))
+                            if (Model.StatusId != new Guid(status.Value.ElementAt(0)) && (status.Key == "Accept" || status.Key == "Discard"))
                             {
                                 string butonDesc = "";
                                 if (status.Key == "Accept") { butonDesc = "Zaakceptuj zgłoszenie"; }
                                 else if (status.Key == "Discard") { butonDesc = "Odrzuć zgłoszenie"; }
 
                                 <li class="list-inline-item align-middle">
-                                    <button type="submit" name="statusID" value="@status.Value.ElementAt(0)" class="btn text-white my-3" style="background-color: @status.Value.ElementAt(1);">
+                                    <button type="submit" name="statusId" value="@status.Value.ElementAt(0)" class="btn text-white my-3" style="background-color: @status.Value.ElementAt(1);">
                                         <i class="fas fa-check me-1"></i>
                                         @butonDesc
                                     </button>
@@ -120,7 +120,7 @@
         @foreach (var message in Model.Messages)
         {
             <div class="col-12 mt-3">
-                @if (message.UserID == Model.UserID)
+                @if (message.UserId == Model.UserId)
                 {
                     <div class="border rounded-3 px-3 py-2" style="background-color: #f7e3e3;">
                         <div class="fw-bold">@message.UserName</div>
@@ -149,7 +149,7 @@
                 <span class="text-danger">To pole jest wymagane</span>
             </div>
             <div>
-                @Html.Hidden("ticketID", Model.TicketID)
+                @Html.Hidden("ticketId", Model.TicketId)
             </div>
             <div class="text-end my-3">
                 <button type="submit" class="btn btn-primary">

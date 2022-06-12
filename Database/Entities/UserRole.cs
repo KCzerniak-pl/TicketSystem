@@ -9,22 +9,22 @@ namespace Database.Entities
         [Key]
         [Column(TypeName = "uniqueidentifier")]
         [Required]
-        public Guid RoleID { get; set; } = default!;
+        public Guid RoleId { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
         [Required]
-        public string RoleName { get; set; } = default!;
+        public string? RoleName { get; set; }
 
         [Required]
-        public bool ShowAll { get; set; } = default!;
+        public bool ShowAll { get; set; }
 
         [Required]
-        public bool CanAccepted { get; set; } = default!;
+        public bool CanAccepted { get; set; }
 
         [Required]
-        public bool Technician { get; set; } = default!;
+        public bool Technician { get; set; }
 
         // Relationships one-to-many.
-        public ICollection<User> Users { get; set; } = default!;
+        public virtual ICollection<User>? Users { get; set; }
     }
 }

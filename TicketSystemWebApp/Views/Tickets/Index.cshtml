@@ -39,7 +39,7 @@
                     @{
                         foreach (var ticket in Model)
                         {
-                            <tr class="table-row" data-href="@Url.Action("edit", "ticket")/@ticket.TicketID">
+                            <tr class="table-row" data-href="@Url.Action("edit", "ticket")/@ticket.TicketId">
                                 <th scope="row">@ticket.No</th>
                                 <td>@ticket.UserName</td>
                                 <td>@ticket.DateTimeCreated.ToString("dd/MM/yyyy HH:mm:ss")</td>
@@ -48,7 +48,7 @@
                                 <td>
                                     @foreach (var status in (IEnumerable<string[]>)ViewData["statuses"]!)
                                     {
-                                        if (ticket.StatusID == new Guid(status.ElementAt(0)))
+                                        if (ticket.StatusId == new Guid(status.ElementAt(0)))
                                         {
                                             <span class="badge" style="background-color: @status.ElementAt(1)">@ticket.StatusName</span>
                                             break;
@@ -56,7 +56,7 @@
                                     }
                                 </td>
                                 <td>@ticket.CategoryName</td>
-                                <td><button type="button" data-mdb-toggle="modal" data-mdb-target="#ticketDeleteModal" onclick="ticketDelete(event, '@ticket.TicketID')" class="btn btn-danger btn-sm"><i class="fas fa-remove"></i></button></td>
+                                <td><button type="button" data-mdb-toggle="modal" data-mdb-target="#ticketDeleteModal" onclick="ticketDelete(event, '@ticket.TicketId')" class="btn btn-danger btn-sm"><i class="fas fa-remove"></i></button></td>
                             </tr>
                         }
                     }
@@ -96,11 +96,11 @@
 @section Scripts{
 <script type="text/javascript">
     /* Add link to delete ticket in modal window */
-    function ticketDelete(e, ticketID) {
+    function ticketDelete(e, ticketId) {
         /* Interrupted click in table row */
         e.stopImmediatePropagation();
 
-        var path = "/ticket/delete/" + ticketID;
+        var path = "/ticket/delete/" + ticketId;
         document.getElementById("btnTicketDeleteConfirm").href = path;
     }
 

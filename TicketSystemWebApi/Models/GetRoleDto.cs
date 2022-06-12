@@ -5,10 +5,10 @@ namespace TicketSystemWebApi.Models
     public class GetRoleDto
     {
         [Required]
-        public Guid RoleID { get; set; }
+        public Guid RoleId { get; set; }
 
         [Required]
-        public string RoleName { get; set; } = default!;
+        public string? RoleName { get; set; }
 
         [Required]
         public bool ShowAll { get; set; }

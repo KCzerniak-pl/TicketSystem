@@ -5,19 +5,19 @@ namespace TicketSystemWebApi.Models
     public class GetUsersDto
     {
         [Required]
-        public Guid UserID { get; set; }
+        public Guid UserId { get; set; }
 
         [Required]
-        public string FirstName { get; set; } = default!;
+        public string? FirstName { get; set; }
 
         [Required]
-        public string LastName { get; set; } = default!;
+        public string? LastName { get; set; }
 
         [Required]
-        public string Email { get; set; } = default!;
+        public string? Email { get; set; }
 
         [Required]
-        public GetRoleDto Role { get; set; } = default!;
+        public GetRoleDto? Role { get; set; }
 
         [Required]
         public DateTimeOffset DateTimeCreated { get; set; }

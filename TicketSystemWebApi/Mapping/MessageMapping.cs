@@ -9,11 +9,11 @@ namespace TicketSystemWebApi.Mapping
         {
             GetMessagesDto returnValue = new GetMessagesDto();
 
-            returnValue.MessageID = message.MessageID;
+            returnValue.MessageId = message.MessageId;
             returnValue.Information = message.Information;
             returnValue.DateTimeCreated = message.DateTimeCreated;
-            returnValue.UserID = message.Owner.UserID;
-            returnValue.UserName = String.Format("{0} {1}", message.Owner.FirstName, message.Owner.LastName);
+            returnValue.UserId = message.Owner!.UserId;
+            returnValue.UserName = String.Format("{0} {1}", message.Owner!.FirstName, message.Owner!.LastName);
 
             return returnValue;
         }
@@ -23,9 +23,9 @@ namespace TicketSystemWebApi.Mapping
         {
             Database.Entities.Message returnValue = new Database.Entities.Message();
 
-            returnValue.MessageID = Guid.NewGuid();
-            returnValue.TicketID = message.TicketID;
-            returnValue.OwnerID = message.UserID;
+            returnValue.MessageId = Guid.NewGuid();
+            returnValue.TicketId = message.TicketId;
+            returnValue.OwnerId = message.UserId;
             returnValue.Information = message.Information;
             returnValue.DateTimeCreated = DateTime.Now;
 

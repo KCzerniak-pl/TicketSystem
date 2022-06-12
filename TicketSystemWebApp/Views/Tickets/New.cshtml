@@ -30,8 +30,8 @@
             <span class="text-danger">To pole jest wymagane</span>
         </div>
         <div class="col-12 col-md-4 mt-4 form-group">
-            @Html.LabelFor(x => x.CategoryID, "Rodzaj zgłoszenia", new { @class = "form-label text-black-50" })
-            @Html.DropDownListFor(x => x.CategoryID, ViewBag.Categories as IEnumerable<SelectListItem>, "-- Wybierz rodzaj zgłoszenia --", new { @class = "form-select shadow-none" })
+            @Html.LabelFor(x => x.CategoryId, "Rodzaj zgłoszenia", new { @class = "form-label text-black-50" })
+            @Html.DropDownListFor(x => x.CategoryId, ViewBag.Categories as IEnumerable<SelectListItem>, "-- Wybierz rodzaj zgłoszenia --", new { @class = "form-select shadow-none" })
             <span class="text-danger">To pole jest wymagane</span>
         </div>
         <div class="text-end my-4">
@@ -85,7 +85,7 @@
             });
 
             /* Validation Custom */
-            validationCustom(['#formTicketNew #Title', '#formTicketNew #Information', '#formTicketNew #CategoryID'], '#formTicketNew button[type="submit"]');
+            validationCustom(['#formTicketNew #Title', '#formTicketNew #Information', '#formTicketNew #CategoryId'], '#formTicketNew button[type="submit"]');
         });
     </script>
 }

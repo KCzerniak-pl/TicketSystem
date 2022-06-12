@@ -9,15 +9,15 @@ namespace TicketSystemWebApi.Mapping
         {
             GetUsersDto returnValue = new GetUsersDto();
 
-            returnValue.UserID = user.UserID;
-            returnValue.FirstName = user.FirstName;
-            returnValue.LastName = user.LastName;
-            returnValue.Email = user.Email;
+            returnValue.UserId = user.UserId;
+            returnValue.FirstName = user.FirstName!;
+            returnValue.LastName = user.LastName!;
+            returnValue.Email = user.Email!;
             returnValue.DateTimeCreated = user.DateTimeCreated;
             returnValue.Role = new GetRoleDto()
             {
-                RoleID = user.Role.RoleID,
-                RoleName = user.Role.RoleName,
+                RoleId = user.Role!.RoleId,
+                RoleName = user.Role.RoleName!,
                 ShowAll = user.Role.ShowAll,
                 CanAccepted = user.Role.CanAccepted,
                 Technician = user.Role.Technician
@@ -31,8 +31,8 @@ namespace TicketSystemWebApi.Mapping
         {
             GetRoleDto returnValue = new GetRoleDto();
 
-            returnValue.RoleID = role.RoleID;
-            returnValue.RoleName = role.RoleName;
+            returnValue.RoleId = role.RoleId;
+            returnValue.RoleName = role.RoleName!;
             returnValue.CanAccepted = role.CanAccepted;
             returnValue.Technician = role.Technician;
 

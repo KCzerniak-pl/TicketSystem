@@ -16,37 +16,33 @@ namespace TicketSystemWebApi.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TicketController : ControllerBase
     {
-        private readonly TicketsDbContext _ticketsDbContext;
-        private readonly UsersDbContext _usersDbContext;
-        private readonly StatusesDbContext _statusesDbContext;
+        private readonly TicketSystemDbContext _ticketSystemDbContext;
         private readonly IEmailSender _emailSender;
 
         // Required configuration of connection context with the database in the Program.cs file and references to the library "Database".
         // Dependency injection - inverse of control (for email sending). Required configuration in the Program.cs.
-        public TicketController(TicketsDbContext tickeetsDbContext, UsersDbContext usersDbContext, StatusesDbContext statusesDbContext, IEmailSender emailSender)
+        public TicketController(TicketSystemDbContext ticketSystemDbContext, IEmailSender emailSender)
         {
-            _ticketsDbContext = tickeetsDbContext;
-            _usersDbContext = usersDbContext;
-            _statusesDbContext = statusesDbContext;
+            _ticketSystemDbContext = ticketSystemDbContext;
             _emailSender = emailSender;
         }
 
-        //GET: api/<ValuesController>?ticketID=<ticketID>&userID=<userID>
+        //GET: api/<ValuesController>?ticketId=<ticketId>&userId=<userId>
         [HttpGet]
-        public async Task<ActionResult<GetTicketDto>> GetTicketByID([FromQuery, BindRequired] Guid ticketID, [FromQuery, BindRequired] Guid userID)
+        public async Task<ActionResult<GetTicketDto>> GetTicketByID([FromQuery, BindRequired] Guid ticketId, [FromQuery, BindRequired] Guid userId)
         {
-            if (_ticketsDbContext.Database.CanConnect())
+            if (_ticketSystemDbContext.Database.CanConnect())
             {
                 try
                 {
                     // Retrieving data from database about selected ticket and remapping to DTO.
-                    GetTicketDto ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == ticketID).Include(p => p.Owner).Include(p => p.Category).Include(p => p.Status).Include(p => p.Messages).ThenInclude(p => p.Owner).Select(p => TicketMapping.GetTicketToDto(p)).FirstAsync();
+                    GetTicketDto ticket = await _ticketSystemDbContext.Tickets!.Where(p => p.TicketId == ticketId).Include(p => p.Owner).Include(p => p.Category).Include(p => p.Status).Include(p => p.Messages)!.ThenInclude(p => p.Owner).Select(p => TicketMapping.GetTicketToDto(p)).FirstAsync();
 
                     // Retrieving data from database about selected user.
-                    Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == userID).Include(p => p.Role).FirstAsync();
+                    Database.Entities.User user = await _ticketSystemDbContext.Users!.Where(p => p.UserId == userId).Include(p => p.Role).FirstAsync();
 
                     // Verification that user can get ticket (must be its author or have permission to view all tickets).
-                    if (ticket.UserID == userID || user.Role.ShowAll == true)
+                    if (ticket.UserId == userId || user.Role!.ShowAll == true)
                     {
                         return StatusCode(StatusCodes.Status200OK, ticket);
                     }
@@ -68,24 +64,24 @@ namespace TicketSystemWebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> PostTicket([FromBody] PostTicketDto postTicket)
         {
-            if (_ticketsDbContext.Database.CanConnect())
+            if (_ticketSystemDbContext.Database.CanConnect())
             {
                 if (ModelState.IsValid)
                 {
                     try
                     {
                         // Retrieving data from database about status for a new ticket (first element).
-                        Guid statusForNewTicket = await _statusesDbContext.Statuses.Select(p => p.StatusID).FirstAsync();
+                        Guid statusForNewTicket = await _ticketSystemDbContext.Statuses!.Select(p => p.StatusId).FirstAsync();
 
                         // Add new ticket.
                         Database.Entities.Ticket ticket = TicketMapping.PostTicketFromDto(postTicket, statusForNewTicket);
-                        _ = _ticketsDbContext.Tickets.Add(ticket);
-                        _ = await _ticketsDbContext.SaveChangesAsync();
+                        _ = _ticketSystemDbContext.Tickets!.Add(ticket);
+                        _ = await _ticketSystemDbContext.SaveChangesAsync();
 
                         // Retrieving data from database about user who added new ticket.
-                        Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == postTicket.UserID).FirstAsync();
+                        Database.Entities.User user = await _ticketSystemDbContext.Users!.Where(p => p.UserId == postTicket.UserId).FirstAsync();
                         // Retrieving data from database about selected ticket - after added.
-                        ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == ticket.TicketID).Include(p => p.Status).Include(p => p.Owner).FirstAsync();
+                        ticket = await _ticketSystemDbContext.Tickets.Where(p => p.TicketId == ticket.TicketId).Include(p => p.Status).Include(p => p.Owner).FirstAsync();
                         // Send e-mail.
                         Helpers.SendEmail.Send(_emailSender, 1, ticket);
 
@@ -107,27 +103,27 @@ namespace TicketSystemWebApi.Controllers
         [HttpPut("StatusUpdate")]
         public async Task<IActionResult> PutTicketStatus([FromBody] PutTicketStatusDto putTicket)
         {
-            if (_ticketsDbContext.Database.CanConnect())
+            if (_ticketSystemDbContext.Database.CanConnect())
             {
                 if (ModelState.IsValid)
                 {
                     try
                     {
                         // Retrieving data from database about selected ticket.
-                        Database.Entities.Ticket ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == putTicket.TicketID).Include(p => p.Owner).FirstAsync();
+                        Database.Entities.Ticket ticket = await _ticketSystemDbContext.Tickets!.Where(p => p.TicketId == putTicket.TicketId).Include(p => p.Owner).FirstAsync();
 
                         // Retrieving data from database about selected user.
-                        Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == putTicket.UserID).Include(p => p.Role).FirstAsync();
+                        Database.Entities.User user = await _ticketSystemDbContext.Users!.Where(p => p.UserId == putTicket.UserId).Include(p => p.Role).FirstAsync();
 
                         // Verification that user can update ticket (must be its author or have permission to view all tickets).
-                        if (ticket.OwnerID == putTicket.UserID || user.Role.ShowAll == true)
+                        if (ticket.OwnerId == putTicket.UserId || user.Role!.ShowAll == true)
                         {
                             // Update data in database about selected ticket.
                             _ = TicketMapping.PutTicketStatusFromDto(ticket, putTicket);
-                            _ = await _ticketsDbContext.SaveChangesAsync();
+                            _ = await _ticketSystemDbContext.SaveChangesAsync();
 
                             // Retrieving data from database about selected ticket - after update.
-                            ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == putTicket.TicketID).Include(p => p.Status).Include(p => p.Owner).FirstAsync();
+                            ticket = await _ticketSystemDbContext.Tickets!.Where(p => p.TicketId == putTicket.TicketId).Include(p => p.Status).Include(p => p.Owner).FirstAsync();
                             // Send e-mail.
                             Helpers.SendEmail.Send(_emailSender, 2, ticket, user);
 
@@ -154,24 +150,24 @@ namespace TicketSystemWebApi.Controllers
         [HttpPut("TitleUpdate")]
         public async Task<IActionResult> PutTicketTitle([FromBody] PutTicketTitleDto putTicket)
         {
-            if (_ticketsDbContext.Database.CanConnect())
+            if (_ticketSystemDbContext.Database.CanConnect())
             {
                 if (ModelState.IsValid)
                 {
                     try
                     {
                         // Retrieving data from database about selected ticket.
-                        Database.Entities.Ticket ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == putTicket.TicketID).FirstAsync();
+                        Database.Entities.Ticket ticket = await _ticketSystemDbContext.Tickets!.Where(p => p.TicketId == putTicket.TicketId).FirstAsync();
 
                         // Retrieving data from database about selected user.
-                        Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == putTicket.UserID).Include(p => p.Role).FirstAsync();
+                        Database.Entities.User user = await _ticketSystemDbContext.Users!.Where(p => p.UserId == putTicket.UserId).Include(p => p.Role).FirstAsync();
 
                         // Verification that user can update ticket (must be its author or have permission to view all tickets).
-                        if (ticket.OwnerID == putTicket.UserID || user.Role.ShowAll == true)
+                        if (ticket.OwnerId == putTicket.UserId || user.Role!.ShowAll == true)
                         {
                             // Update data in database about selected ticket.
                             _ = TicketMapping.PutTicketTitleFromDto(ticket, putTicket);
-                            _ = await _ticketsDbContext.SaveChangesAsync();
+                            _ = await _ticketSystemDbContext.SaveChangesAsync();
 
                             return StatusCode(StatusCodes.Status204NoContent);
                         }
@@ -196,24 +192,24 @@ namespace TicketSystemWebApi.Controllers
         [HttpPut("CategoryUpdate")]
         public async Task<IActionResult> PutTicketCategory([FromBody] PutTicketCategoryDto putTicket)
         {
-            if (_ticketsDbContext.Database.CanConnect())
+            if (_ticketSystemDbContext.Database.CanConnect())
             {
                 if (ModelState.IsValid)
                 {
                     try
                     {
                         // Retrieving data from database about selected ticket.
-                        Database.Entities.Ticket ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == putTicket.TicketID).FirstAsync();
+                        Database.Entities.Ticket ticket = await _ticketSystemDbContext.Tickets!.Where(p => p.TicketId == putTicket.TicketId).FirstAsync();
 
                         // Retrieving data from database about selected user.
-                        Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == putTicket.UserID).Include(p => p.Role).FirstAsync();
+                        Database.Entities.User user = await _ticketSystemDbContext.Users!.Where(p => p.UserId == putTicket.UserId).Include(p => p.Role).FirstAsync();
 
                         // Verification that user can update ticket (must be its author or have permission to view all tickets).
-                        if (ticket.OwnerID == putTicket.UserID || user.Role.ShowAll == true)
+                        if (ticket.OwnerId == putTicket.UserId || user.Role!.ShowAll == true)
                         {
                             // Update data in database about selected ticket.
                             _ = TicketMapping.PutTicketCategoryFromDto(ticket, putTicket);
-                            _ = await _ticketsDbContext.SaveChangesAsync();
+                            _ = await _ticketSystemDbContext.SaveChangesAsync();
 
                             return StatusCode(StatusCodes.Status204NoContent);
                         }
@@ -238,24 +234,24 @@ namespace TicketSystemWebApi.Controllers
         [HttpPut("TechnicianUpdate")]
         public async Task<IActionResult> TechnicianUpdate([FromBody] PutTicketTechnicianDto putTicket)
         {
-            if (_ticketsDbContext.Database.CanConnect())
+            if (_ticketSystemDbContext.Database.CanConnect())
             {
                 if (ModelState.IsValid)
                 {
                     try
                     {
                         // Retrieving data from database about selected ticket.
-                        Database.Entities.Ticket ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == putTicket.TicketID).FirstAsync();
+                        Database.Entities.Ticket ticket = await _ticketSystemDbContext.Tickets!.Where(p => p.TicketId == putTicket.TicketId).FirstAsync();
 
                         // Retrieving data from database about selected user.
-                        Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == putTicket.UserID).Include(p => p.Role).FirstAsync();
+                        Database.Entities.User user = await _ticketSystemDbContext.Users!.Where(p => p.UserId == putTicket.UserId).Include(p => p.Role).FirstAsync();
 
                         // Verification that user can update ticket (must be its author or have permission to view all tickets).
-                        if (ticket.OwnerID == putTicket.UserID || user.Role.ShowAll == true)
+                        if (ticket.OwnerId == putTicket.UserId || user.Role!.ShowAll == true)
                         {
                             // Update data in database about selected ticket.
                             _ = TicketMapping.PutTicketTechnicianFromDto(ticket, putTicket);
-                            _ = await _ticketsDbContext.SaveChangesAsync();
+                            _ = await _ticketSystemDbContext.SaveChangesAsync();
 
                             return StatusCode(StatusCodes.Status204NoContent);
                         }
@@ -280,22 +276,22 @@ namespace TicketSystemWebApi.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteTicket([FromBody] DeleteTicketDto deleteTicket)
         {
-            if (_ticketsDbContext.Database.CanConnect())
+            if (_ticketSystemDbContext.Database.CanConnect())
             {
                 try
                 {
                     // Retrieving data from database about selected ticket.
-                    Database.Entities.Ticket ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == deleteTicket.TicketID).Include(p => p.Messages).FirstAsync();
+                    Database.Entities.Ticket ticket = await _ticketSystemDbContext.Tickets!.Where(p => p.TicketId == deleteTicket.TicketId).Include(p => p.Messages).FirstAsync();
 
                     // Retrieving data from database about selected user.
-                    Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == deleteTicket.UserID).Include(p => p.Role).FirstAsync();
+                    Database.Entities.User user = await _ticketSystemDbContext.Users!.Where(p => p.UserId == deleteTicket.UserId).Include(p => p.Role).FirstAsync();
 
                     // Verification that user can delete ticket (must be its author or have permission to view all tickets).
-                    if (ticket.OwnerID == deleteTicket.UserID || user.Role.ShowAll == true)
+                    if (ticket.OwnerId == deleteTicket.UserId || user.Role!.ShowAll == true)
                     {
                         // Remove data id database about selected ticket.
-                        _ = _ticketsDbContext.Tickets.Remove(ticket);
-                        _ = await _ticketsDbContext.SaveChangesAsync();
+                        _ = _ticketSystemDbContext.Tickets!.Remove(ticket);
+                        _ = await _ticketSystemDbContext.SaveChangesAsync();
 
                         return StatusCode(StatusCodes.Status204NoContent);
                     }

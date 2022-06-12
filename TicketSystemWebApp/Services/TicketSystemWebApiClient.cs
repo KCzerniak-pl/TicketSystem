@@ -131,22 +131,22 @@ namespace TicketSystemWebApp
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<GetUsersDto> GetUserDataAsync(System.Guid userID)
+        public virtual System.Threading.Tasks.Task<GetUsersDto> GetUserDataAsync(System.Guid userId)
         {
-            return GetUserDataAsync(userID, System.Threading.CancellationToken.None);
+            return GetUserDataAsync(userId, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<GetUsersDto> GetUserDataAsync(System.Guid userID, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<GetUsersDto> GetUserDataAsync(System.Guid userId, System.Threading.CancellationToken cancellationToken)
         {
-            if (userID == null)
-                throw new System.ArgumentNullException("userID");
+            if (userId == null)
+                throw new System.ArgumentNullException("userId");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Account/{userID}");
-            urlBuilder_.Replace("{userID}", System.Uri.EscapeDataString(ConvertToString(userID, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Account/{userId}");
+            urlBuilder_.Replace("{userId}", System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -436,26 +436,26 @@ namespace TicketSystemWebApp
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<GetTicketDto> GetTicketAsync(System.Guid ticketID, System.Guid userID)
+        public virtual System.Threading.Tasks.Task<GetTicketDto> GetTicketAsync(System.Guid ticketId, System.Guid userId)
         {
-            return GetTicketAsync(ticketID, userID, System.Threading.CancellationToken.None);
+            return GetTicketAsync(ticketId, userId, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<GetTicketDto> GetTicketAsync(System.Guid ticketID, System.Guid userID, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<GetTicketDto> GetTicketAsync(System.Guid ticketId, System.Guid userId, System.Threading.CancellationToken cancellationToken)
         {
-            if (ticketID == null)
-                throw new System.ArgumentNullException("ticketID");
+            if (ticketId == null)
+                throw new System.ArgumentNullException("ticketId");
 
-            if (userID == null)
-                throw new System.ArgumentNullException("userID");
+            if (userId == null)
+                throw new System.ArgumentNullException("userId");
 
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Ticket?");
-            urlBuilder_.Append(System.Uri.EscapeDataString("ticketID") + "=").Append(System.Uri.EscapeDataString(ConvertToString(ticketID, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            urlBuilder_.Append(System.Uri.EscapeDataString("userID") + "=").Append(System.Uri.EscapeDataString(ConvertToString(userID, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            urlBuilder_.Append(System.Uri.EscapeDataString("ticketId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(ticketId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            urlBuilder_.Append(System.Uri.EscapeDataString("userId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             urlBuilder_.Length--;
 
             var client_ = _httpClient;
@@ -945,15 +945,15 @@ namespace TicketSystemWebApp
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GetTicketsDto>> GetTicketsAsync(int skip, int take, System.Guid? userID)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GetTicketsDto>> GetTicketsAsync(int skip, int take, System.Guid? userId)
         {
-            return GetTicketsAsync(skip, take, userID, System.Threading.CancellationToken.None);
+            return GetTicketsAsync(skip, take, userId, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GetTicketsDto>> GetTicketsAsync(int skip, int take, System.Guid? userID, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<GetTicketsDto>> GetTicketsAsync(int skip, int take, System.Guid? userId, System.Threading.CancellationToken cancellationToken)
         {
             if (skip == null)
                 throw new System.ArgumentNullException("skip");
@@ -965,9 +965,9 @@ namespace TicketSystemWebApp
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Tickets?");
             urlBuilder_.Append(System.Uri.EscapeDataString("skip") + "=").Append(System.Uri.EscapeDataString(ConvertToString(skip, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             urlBuilder_.Append(System.Uri.EscapeDataString("take") + "=").Append(System.Uri.EscapeDataString(ConvertToString(take, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
-            if (userID != null)
+            if (userId != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("userID") + "=").Append(System.Uri.EscapeDataString(ConvertToString(userID, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("userId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
 
@@ -1036,21 +1036,21 @@ namespace TicketSystemWebApp
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<int> GetTicketsCountAsync(System.Guid? userID)
+        public virtual System.Threading.Tasks.Task<int> GetTicketsCountAsync(System.Guid? userId)
         {
-            return GetTicketsCountAsync(userID, System.Threading.CancellationToken.None);
+            return GetTicketsCountAsync(userId, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<int> GetTicketsCountAsync(System.Guid? userID, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<int> GetTicketsCountAsync(System.Guid? userId, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/api/Tickets/Count?");
-            if (userID != null)
+            if (userId != null)
             {
-                urlBuilder_.Append(System.Uri.EscapeDataString("userID") + "=").Append(System.Uri.EscapeDataString(ConvertToString(userID, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+                urlBuilder_.Append(System.Uri.EscapeDataString("userId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
 
@@ -1219,22 +1219,22 @@ namespace TicketSystemWebApp
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class DeleteTicketDto
     {
-        [Newtonsoft.Json.JsonProperty("userID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid UserID { get; set; }
+        public System.Guid UserId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("ticketID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("ticketId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid TicketID { get; set; }
+        public System.Guid TicketId { get; set; }
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class GetCategoriesDto
     {
-        [Newtonsoft.Json.JsonProperty("categoryID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("categoryId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid CategoryID { get; set; }
+        public System.Guid CategoryId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -1245,9 +1245,9 @@ namespace TicketSystemWebApp
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class GetMessagesDto
     {
-        [Newtonsoft.Json.JsonProperty("messageID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("messageId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid MessageID { get; set; }
+        public System.Guid MessageId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("information", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -1257,9 +1257,9 @@ namespace TicketSystemWebApp
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public System.DateTimeOffset DateTimeCreated { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("userID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid UserID { get; set; }
+        public System.Guid UserId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("userName", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -1270,9 +1270,9 @@ namespace TicketSystemWebApp
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class GetRoleDto
     {
-        [Newtonsoft.Json.JsonProperty("roleID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("roleId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid RoleID { get; set; }
+        public System.Guid RoleId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("roleName", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -1292,21 +1292,21 @@ namespace TicketSystemWebApp
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class GetTicketDto
     {
-        [Newtonsoft.Json.JsonProperty("ticketID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("ticketId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid TicketID { get; set; }
+        public System.Guid TicketId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("statusID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("statusId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid StatusID { get; set; }
+        public System.Guid StatusId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("statusName", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string StatusName { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("categoryID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("categoryId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid CategoryID { get; set; }
+        public System.Guid CategoryId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("categoryName", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -1324,9 +1324,9 @@ namespace TicketSystemWebApp
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Title { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("userID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid UserID { get; set; }
+        public System.Guid UserId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("userName", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -1339,25 +1339,25 @@ namespace TicketSystemWebApp
         [Newtonsoft.Json.JsonProperty("messages", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<GetMessagesDto> Messages { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("technicianID", Required = Newtonsoft.Json.Required.AllowNull)]
+        [Newtonsoft.Json.JsonProperty("technicianId", Required = Newtonsoft.Json.Required.AllowNull)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid? TechnicianID { get; set; }
+        public System.Guid? TechnicianId { get; set; }
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class GetTicketsDto
     {
-        [Newtonsoft.Json.JsonProperty("ticketID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("ticketId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid TicketID { get; set; }
+        public System.Guid TicketId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("no", Required = Newtonsoft.Json.Required.Always)]
         public int No { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("statusID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("statusId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid StatusID { get; set; }
+        public System.Guid StatusId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("statusName", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -1379,9 +1379,9 @@ namespace TicketSystemWebApp
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         public string Title { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("userID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid UserID { get; set; }
+        public System.Guid UserId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("userName", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -1392,9 +1392,9 @@ namespace TicketSystemWebApp
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class GetUsersDto
     {
-        [Newtonsoft.Json.JsonProperty("userID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid UserID { get; set; }
+        public System.Guid UserId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("firstName", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -1450,13 +1450,13 @@ namespace TicketSystemWebApp
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class PostMessageDto
     {
-        [Newtonsoft.Json.JsonProperty("userID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid UserID { get; set; }
+        public System.Guid UserId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("ticketID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("ticketId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid TicketID { get; set; }
+        public System.Guid TicketId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("information", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -1467,13 +1467,13 @@ namespace TicketSystemWebApp
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class PostTicketDto
     {
-        [Newtonsoft.Json.JsonProperty("userID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid UserID { get; set; }
+        public System.Guid UserId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("categoryID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("categoryId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid CategoryID { get; set; }
+        public System.Guid CategoryId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
@@ -1488,68 +1488,68 @@ namespace TicketSystemWebApp
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class PutTicketCategoryDto
     {
-        [Newtonsoft.Json.JsonProperty("userID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid UserID { get; set; }
+        public System.Guid UserId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("ticketID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("ticketId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid TicketID { get; set; }
+        public System.Guid TicketId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("categoryID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("categoryId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid CategoryID { get; set; }
+        public System.Guid CategoryId { get; set; }
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class PutTicketStatusDto
     {
-        [Newtonsoft.Json.JsonProperty("userID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid UserID { get; set; }
+        public System.Guid UserId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("ticketID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("ticketId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid TicketID { get; set; }
+        public System.Guid TicketId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("statusID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("statusId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid StatusID { get; set; }
+        public System.Guid StatusId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("technicianID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("technicianId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid TechnicianID { get; set; }
+        public System.Guid TechnicianId { get; set; }
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class PutTicketTechnicianDto
     {
-        [Newtonsoft.Json.JsonProperty("userID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid UserID { get; set; }
+        public System.Guid UserId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("ticketID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("ticketId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid TicketID { get; set; }
+        public System.Guid TicketId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("technicianID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("technicianId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid TechnicianID { get; set; }
+        public System.Guid TechnicianId { get; set; }
 
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.15.10.0 (NJsonSchema v10.6.10.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class PutTicketTitleDto
     {
-        [Newtonsoft.Json.JsonProperty("userID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid UserID { get; set; }
+        public System.Guid UserId { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("ticketID", Required = Newtonsoft.Json.Required.Always)]
+        [Newtonsoft.Json.JsonProperty("ticketId", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
-        public System.Guid TicketID { get; set; }
+        public System.Guid TicketId { get; set; }
 
         [Newtonsoft.Json.JsonProperty("title", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]

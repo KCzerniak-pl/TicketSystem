@@ -11,12 +11,12 @@ namespace TicketSystemWebApi.Helpers
             Dictionary<string, string> replacements = new Dictionary<string, string>
             {
                 { "{ticket.No}", $"{ticket.No}" },
-                { "{ticket.TicketID}", $"{ticket.TicketID}" },
+                { "{ticket.TicketId}", $"{ticket.TicketId}" },
                 { "{ticket.DateTimeCreated}", $"{ticket.DateTimeCreated.ToString("dd/MM/yyyy HH:mm:ss")}" },
-                { "{ticket.Owner.FirstName}", $"{ticket.Owner.FirstName}" },
+                { "{ticket.Owner.FirstName}", $"{ticket.Owner!.FirstName}" },
                 { "{ticket.Owner.LastName}", $"{ticket.Owner.LastName}" },
                 { "{ticket.Title}", $"{ticket.Title}" },
-                { "{ticket.Status.Name}", $"{ticket.Status.Name}" },
+                { "{ticket.Status.Name}", $"{ticket.Status!.Name}" },
                 { "{user.FirstName}", $"{user?.FirstName}" },
                 { "{user.LastName}", $"{user?.LastName}" }
             };
@@ -43,7 +43,7 @@ namespace TicketSystemWebApi.Helpers
                 string title = Regex.Match(content, "(?<=<title>)(.*)(?=</title>)").ToString();
 
                 // Send e-mail.
-                EmailMessage message = new EmailMessage(new string[] { ticket.Owner.Email }, title, content);
+                EmailMessage message = new EmailMessage(new string[] { ticket.Owner.Email! }, title, content);
                 await _emailSender.SendEmailAsync(message);
             }
         }

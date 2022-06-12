@@ -5,14 +5,14 @@ namespace TicketSystemWebApi.Models
     public class PutTicketStatusDto
     {
         [Required]
-        public Guid UserID { get; set; }
+        public Guid UserId { get; set; }
 
         [Required]
-        public Guid TicketID { get; set; }
+        public Guid TicketId { get; set; }
 
         [Required]
-        public Guid StatusID { get; set; }
+        public Guid StatusId { get; set; }
 
-        public Guid TechnicianID { get; set; }
+        public Guid TechnicianId { get; set; }
     }
 }

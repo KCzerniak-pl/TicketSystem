@@ -36,14 +36,14 @@ namespace TicketSystemWebApp.Controllers
             // Get JWT from session.
             string? jwt = SessionHelper.GetObjectFromJson<string>(HttpContext, "Jwt");
 
-            // Get userID from JWT.
-            Guid userID = Jwt.GetObjectFromJwt<Guid>(jwt!, "UserID");
+            // Get userId from JWT.
+            Guid userId = Jwt.GetObjectFromJwt<Guid>(jwt!, "UserId");
 
             // Retrieving data about selected user.
             UserViewModel user = await _accountService.GetUserDataAsync(jwt!);
 
             // Retrieving count about all ticket or only ticket for selected user.
-            int ticetsCount = await _ticketsService.GetTicketsCountAsync(jwt!, user.Role.ShowAll);
+            int ticetsCount = await _ticketsService.GetTicketsCountAsync(jwt!, user.Role!.ShowAll);
 
             if (ticetsCount > 0)
             {
@@ -81,7 +81,7 @@ namespace TicketSystemWebApp.Controllers
             // Data for drop down list with categories.
             List<CategoryViewModel> categories = await _ticketsService.GetCategoriesAsync(jwt!);
             List<SelectListItem> selectListItem = new List<SelectListItem>();
-            categories.ForEach(x => selectListItem.Add(new SelectListItem { Value = x.CategoryID.ToString(), Text = x.Name }));
+            categories.ForEach(x => selectListItem.Add(new SelectListItem { Value = x.CategoryId.ToString(), Text = x.Name }));
 
             ViewBag.Categories = selectListItem;
             ViewBag.UserName = string.Format("{0} {1}", user.FirstName, user.LastName);
@@ -90,8 +90,8 @@ namespace TicketSystemWebApp.Controllers
             return View();
         }
 
-        [HttpGet("ticket/edit/{ticketID}")]
-        public async Task<IActionResult> Edit(Guid ticketID)
+        [HttpGet("ticket/edit/{ticketId}")]
+        public async Task<IActionResult> Edit(Guid ticketId)
         {
             // Check autorization for this site.
             if (!SessionHelper.GetObjectFromJson<bool>(HttpContext, "Authorization"))
@@ -106,35 +106,35 @@ namespace TicketSystemWebApp.Controllers
             UserViewModel user = await _accountService.GetUserDataAsync(jwt!);
 
             // Retrieving data about selected ticket.
-            TicketViewModel ticket = await _ticketsService.GetTicketAsync(jwt!, ticketID);
+            TicketViewModel ticket = await _ticketsService.GetTicketAsync(jwt!, ticketId);
 
             // Retrieving data about categories.
             List<CategoryViewModel> categories = await _ticketsService.GetCategoriesAsync(jwt!);
             // Data for drop down list with categories.
             List<SelectListItem> selectListItemForCategories = new List<SelectListItem>();
-            categories.ForEach(x => selectListItemForCategories.Add(new SelectListItem { Value = x.CategoryID.ToString(), Text = x.Name }));
+            categories.ForEach(x => selectListItemForCategories.Add(new SelectListItem { Value = x.CategoryId.ToString(), Text = x.Name }));
 
             // Retrieving data about technicians.
             List<UserViewModel> technicians = await _accountService.GetTechniciansAsync(jwt!);
             // Data for drop down list with technicians.
             List<SelectListItem> selectListItemForTechnicians = new List<SelectListItem>();
-            technicians.ForEach(x => selectListItemForTechnicians.Add(new SelectListItem { Value = x.UserID.ToString(), Text = x.FirstName + " " + x.LastName }));
+            technicians.ForEach(x => selectListItemForTechnicians.Add(new SelectListItem { Value = x.UserId.ToString(), Text = x.FirstName + " " + x.LastName }));
 
             // Check if ticket has the selected technician.
-            if (ticket.TechnicianID is null && !user.Role.CanAccepted)
+            if (ticket.TechnicianId is null && !user.Role!.CanAccepted)
             {
                 ticket.TechnicianName = "&nbsp";
             }
             else
             {
-                ticket.TechnicianName = (ticket.TechnicianID is not null) ? technicians.Where(p => p.UserID == ticket.TechnicianID).Select(p => p.FirstName + " " + p.LastName).FirstOrDefault() : technicians.Select(p => p.FirstName + " " + p.LastName).FirstOrDefault();
+                ticket.TechnicianName = (ticket.TechnicianId is not null) ? technicians.Where(p => p.UserId == ticket.TechnicianId).Select(p => p.FirstName + " " + p.LastName).FirstOrDefault() : technicians.Select(p => p.FirstName + " " + p.LastName).FirstOrDefault();
             }
 
             // Retrieving data about all statuses.
             var statuses = _configuration.GetSection("Statuses").Get<Dictionary<string, string[]>>();
 
             ViewData["statuses"] = statuses;
-            ViewBag.CanAccepted = user.Role.CanAccepted;
+            ViewBag.CanAccepted = user.Role!.CanAccepted;
             ViewBag.Categories = selectListItemForCategories;
             ViewBag.Technicians = selectListItemForTechnicians;
 
@@ -186,12 +186,12 @@ namespace TicketSystemWebApp.Controllers
                 await _ticketsService.PostMessageAsync(jwt!, message);
             }
 
-            return RedirectToAction(nameof(Edit), new { message.TicketID });
+            return RedirectToAction(nameof(Edit), new { message.TicketId });
         }
 
         [HttpPost]
         [TypeFilter(typeof(ValidateAntiForgeryTokenFailed))] // Filter executed in case of incorrect validation of the security token for form.
-        public async Task<IActionResult> StatusUpdate(TicketStatusUpdateViewModel ticket, Guid? technicianID)
+        public async Task<IActionResult> StatusUpdate(TicketStatusUpdateViewModel ticket, Guid? technicianId)
         {
             // Check autorization for this site.
             if (!SessionHelper.GetObjectFromJson<bool>(HttpContext, "Authorization"))
@@ -204,17 +204,17 @@ namespace TicketSystemWebApp.Controllers
                 // Get JWT from session.
                 string? jwt = SessionHelper.GetObjectFromJson<string>(HttpContext, "Jwt");
 
-                if (technicianID is null)
+                if (technicianId is null)
                 {
                     // Retrieving data about technicians.
                     List<UserViewModel> technicians = await _accountService.GetTechniciansAsync(jwt!);
 
                     // First technician is default.
-                    technicianID = technicians.Select(p => p.UserID).FirstOrDefault();
+                    technicianId = technicians.Select(p => p.UserId).FirstOrDefault();
                 }
 
                 // Update status for ticket (used service from TicketsService).
-                await _ticketsService.PutTicketStatusAsync(jwt!, ticket, technicianID ?? default);
+                await _ticketsService.PutTicketStatusAsync(jwt!, ticket, technicianId ?? default);
             }
 
             return RedirectToAction(nameof(Index));
@@ -239,7 +239,7 @@ namespace TicketSystemWebApp.Controllers
                 await _ticketsService.PutTicketTitleAsync(jwt!, ticket);
             }
 
-            return RedirectToAction(nameof(Edit), new { ticket.TicketID });
+            return RedirectToAction(nameof(Edit), new { ticket.TicketId });
         }
 
         [HttpPost]
@@ -261,7 +261,7 @@ namespace TicketSystemWebApp.Controllers
                 await _ticketsService.PutTicketCategoryAsync(jwt!, ticket);
             }
 
-            return RedirectToAction(nameof(Edit), new { ticket.TicketID });
+            return RedirectToAction(nameof(Edit), new { ticket.TicketId });
         }
 
         [HttpPost]
@@ -283,11 +283,11 @@ namespace TicketSystemWebApp.Controllers
                 await _ticketsService.PutTicketTechnicianAsync(jwt!, ticket);
             }
 
-            return RedirectToAction(nameof(Edit), new { ticket.TicketID });
+            return RedirectToAction(nameof(Edit), new { ticket.TicketId });
         }
 
-        [HttpGet("ticket/delete/{ticketID}")]
-        public async Task<IActionResult> DeleteTicket(Guid ticketID)
+        [HttpGet("ticket/delete/{ticketId}")]
+        public async Task<IActionResult> DeleteTicket(Guid ticketId)
         {
             // Check autorization for this site.
             if (!SessionHelper.GetObjectFromJson<bool>(HttpContext, "Authorization"))
@@ -299,7 +299,7 @@ namespace TicketSystemWebApp.Controllers
             string? jwt = SessionHelper.GetObjectFromJson<string>(HttpContext, "Jwt");
 
             // Delete ticket (used service from TicketsService).
-            await _ticketsService.DeleteTicketAsync(jwt!, ticketID);
+            await _ticketsService.DeleteTicketAsync(jwt!, ticketId);
 
             return RedirectToAction(nameof(Index));
         }

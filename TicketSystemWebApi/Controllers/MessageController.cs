@@ -14,44 +14,40 @@ namespace TicketSystemWebApi.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class MessageController : ControllerBase
     {
-        private readonly TicketsDbContext _ticketsDbContext;
-        private readonly UsersDbContext _usersDbContext;
-        private readonly MessagesDbContext _messagesDbContext;
+        private readonly TicketSystemDbContext _ticketSystemDbContext;
 
         // Required configuration of connection context with the database in the Program.cs file and references to the library "Database".
-        public MessageController(TicketsDbContext tickeetsDbContext, UsersDbContext usersDbContext, MessagesDbContext messagesDbContext)
+        public MessageController(TicketSystemDbContext ticketSystemDbContext)
         {
-            _ticketsDbContext = tickeetsDbContext;
-            _usersDbContext = usersDbContext;
-            _messagesDbContext = messagesDbContext;
+            _ticketSystemDbContext = ticketSystemDbContext;
         }
 
         // POST api/<ValuesController>
         [HttpPost]
         public async Task<IActionResult> PostMessage([FromBody] PostMessageDto postMessage)
         {
-            if (_messagesDbContext.Database.CanConnect())
+            if (_ticketSystemDbContext.Database.CanConnect())
             {
                 if (ModelState.IsValid)
                 {
                     try
                     {
                         // Retrieving data from database about selected ticket.
-                        Database.Entities.Ticket ticket = await _ticketsDbContext.Tickets.Where(p => p.TicketID == postMessage.TicketID).Include(p => p.Owner).FirstAsync();
+                        Database.Entities.Ticket ticket = await _ticketSystemDbContext.Tickets!.Where(p => p.TicketId == postMessage.TicketId).Include(p => p.Owner).FirstAsync();
 
                         // Retrieving data from database about selected user.
-                        Database.Entities.User user = await _usersDbContext.Users.Where(p => p.UserID == postMessage.UserID).Include(p => p.Role).FirstAsync();
+                        Database.Entities.User user = await _ticketSystemDbContext.Users!.Where(p => p.UserId == postMessage.UserId).Include(p => p.Role).FirstAsync();
 
                         // Verification that user can add new message for ticket (must be its author or have permission to view all tickets).
-                        if (ticket.OwnerID == postMessage.UserID || user.Role.ShowAll == true)
+                        if (ticket.OwnerId == postMessage.UserId || user.Role!.ShowAll == true)
                         {
                             // Add new massage for ticket.
-                            _ = _messagesDbContext.Messages.Add(MessageMapping.PostMessageFromDto(postMessage));
-                            _ = await _messagesDbContext.SaveChangesAsync();
+                            _ = _ticketSystemDbContext.Messages!.Add(MessageMapping.PostMessageFromDto(postMessage));
 
                             // Set date update for ticket.
                             ticket.DateTimeModified = DateTime.Now;
-                            _ = await _ticketsDbContext.SaveChangesAsync();
+
+                            _ = await _ticketSystemDbContext.SaveChangesAsync();
 
                             return StatusCode(StatusCodes.Status204NoContent);
                         }

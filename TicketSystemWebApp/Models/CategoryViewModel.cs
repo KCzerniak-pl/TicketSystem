@@ -2,8 +2,8 @@
 {
     public class CategoryViewModel
     {
-        public Guid CategoryID { get; set; }
+        public Guid CategoryId { get; set; }
 
-        public string Name { get; set; } = default!;
+        public string? Name { get; set; }
     }
 }

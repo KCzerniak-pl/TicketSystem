@@ -9,8 +9,8 @@ namespace TicketSystemWebApp.Mapping
         {
             MessagesViewModel returnValue = new MessagesViewModel();
 
-            returnValue.MessageID = message.MessageID;
-            returnValue.UserID = message.UserID;
+            returnValue.MessageId = message.MessageId;
+            returnValue.UserId = message.UserId;
             returnValue.UserName = message.UserName;
             returnValue.Information = message.Information;
             returnValue.DateTimeCreated = message.DateTimeCreated;
@@ -19,12 +19,12 @@ namespace TicketSystemWebApp.Mapping
         }
 
         // Mapping data to DTO - new message.
-        internal static PostMessageDto PostMessageToDto(MessageNewViewModel message, Guid userID)
+        internal static PostMessageDto PostMessageToDto(MessageNewViewModel message, Guid userId)
         {
             PostMessageDto returnValue = new PostMessageDto();
 
-            returnValue.UserID = userID;
-            returnValue.TicketID = message.TicketID;
+            returnValue.UserId = userId;
+            returnValue.TicketId = message.TicketId;
             returnValue.Information = message.Information;
 
             return returnValue;

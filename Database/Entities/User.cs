@@ -9,40 +9,40 @@ namespace Database.Entities
         [Key]
         [Column(TypeName = "uniqueidentifier")]
         [Required]
-        public Guid UserID { get; set; } = default!;
+        public Guid UserId { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
         [Required]
-        public string FirstName { get; set; } = default!;
+        public string? FirstName { get; set; }
 
         [Column(TypeName = "nvarchar(50)")]
         [Required]
-        public string LastName { get; set; } = default!;
+        public string? LastName { get; set; }
 
         [Column(TypeName = "nvarchar(100)")]
         [Required]
-        public string Email { get; set; } = default!;
+        public string? Email { get; set; }
 
         [Column(TypeName = "uniqueidentifier")]
         [Required]
-        public Guid RoleID { get; set; } = default!;
+        public Guid RoleId { get; set; }
 
         [Column(TypeName = "nvarchar(max)")]
         [Required]
-        public string PasswordHash { get; set; } = default!;
+        public string? PasswordHash { get; set; }
 
         [Column(TypeName = "datetimeoffset(0)")]
         [Required]
-        public DateTimeOffset DateTimeCreated { get; set; } = default!;
-
+        public DateTimeOffset DateTimeCreated { get; set; }
+        
         // Relationships one-to-many.
-        public UserRole Role { get; set; } = default!;
-        public ICollection<Message> Messages { get; set; } = default!;
+        public UserRole? Role { get; set; }
+        public ICollection<Message>? Messages { get; set; }
 
         [InverseProperty("Owner")]
-        public virtual ICollection<Ticket> OwnerTickets { get; set; } = default!;
+        public virtual ICollection<Ticket>? OwnerTickets { get; set; }
 
         [InverseProperty("Technician")]
-        public virtual ICollection<Ticket> TechnicianTickets { get; set; } = default!;
+        public virtual ICollection<Ticket>? TechnicianTickets { get; set; }
     }
 }

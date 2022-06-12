@@ -17,13 +17,13 @@ namespace TicketSystemWebApi.Controllers
     public class AccountController : AuthControllerBase
     {
         // Required references to the library "Database".
-        private readonly UsersDbContext _usersDbContext;
+        private readonly TicketSystemDbContext _ticketSystemDbContext;
 
         // JWT - inheritance from class AuthControllerBase.cs.
         // UsersDbContext - required configuration of connection context with the database in the Program.cs file.
-        public AccountController(IOptionsMonitor<JwtConfig> optionsMonitor, UsersDbContext usersDbContext) : base(optionsMonitor)
+        public AccountController(IOptionsMonitor<JwtConfig> optionsMonitor, TicketSystemDbContext ticketSystemDbContext) : base(optionsMonitor)
         {
-            _usersDbContext = usersDbContext;
+            _ticketSystemDbContext = ticketSystemDbContext;
         }
 
         //GET: api//<ValuesController>
@@ -35,11 +35,11 @@ namespace TicketSystemWebApi.Controllers
                 try
                 {
                     // Get user by e-mail address.
-                    Database.Entities.User user = await _usersDbContext.Users.Where(p => p.Email == postLogin.Email).FirstAsync();
+                    Database.Entities.User user = await _ticketSystemDbContext.Users!.Where(p => p.Email == postLogin.Email).FirstAsync();
 
                     // AspNetCore Identity.
                     PasswordHasher<string> password = new PasswordHasher<string>();
-                    PasswordVerificationResult verificationResult = password.VerifyHashedPassword(postLogin.Email, user.PasswordHash, postLogin.Password);
+                    PasswordVerificationResult verificationResult = password.VerifyHashedPassword(postLogin.Email!, user.PasswordHash, postLogin.Password);
 
                     if (verificationResult == PasswordVerificationResult.Success)
                     {
@@ -58,17 +58,17 @@ namespace TicketSystemWebApi.Controllers
             return StatusCode(StatusCodes.Status400BadRequest, AccountMapping.LoginResponseToDto(false, "Nieprawidłowe dane"));
         }
 
-        //GET: api/<ValuesController>/<UserID>
-        [HttpGet("{userID}")]
+        //GET: api/<ValuesController>/<UserId>
+        [HttpGet("{userId}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<GetUsersDto>> GetUserData([FromRoute] Guid userID)
+        public async Task<ActionResult<GetUsersDto>> GetUserData([FromRoute] Guid userId)
         {
-            if (_usersDbContext.Database.CanConnect())
+            if (_ticketSystemDbContext.Database.CanConnect())
             {
                 try
                 {
                     // Retrieving data from database about selected user and remapping to DTO.
-                    GetUsersDto user = await _usersDbContext.Users.Where(p => p.UserID == userID).Include(p => p.Role).Select(p => AccountMapping.GetUsersToDto(p)).FirstAsync();
+                    GetUsersDto user = await _ticketSystemDbContext.Users!.Where(p => p.UserId == userId).Include(p => p.Role).Select(p => AccountMapping.GetUsersToDto(p)).FirstAsync();
 
                     return StatusCode(StatusCodes.Status200OK, user);
                 }
@@ -86,10 +86,10 @@ namespace TicketSystemWebApi.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<GetUsersDto>>> GetTechniciansData()
         {
-            if (_usersDbContext.Database.CanConnect())
+            if (_ticketSystemDbContext.Database.CanConnect())
             {
                 // Retrieving data from database about all technicians and remapping to DTO.
-                IEnumerable<GetUsersDto> users = await _usersDbContext.Users.Where(p => p.Role.Technician == true).Include(p => p.Role).Select(p => AccountMapping.GetUsersToDto(p)).ToArrayAsync();
+                IEnumerable<GetUsersDto> users = await _ticketSystemDbContext.Users!.Where(p => p.Role!.Technician == true).Include(p => p.Role).Select(p => AccountMapping.GetUsersToDto(p)).ToArrayAsync();
 
                 if (users.Any())
                 {

@@ -5,10 +5,10 @@ namespace TicketSystemWebApi.Models
     public class DeleteTicketDto
     {
         [Required]
-        public Guid UserID { get; set; }
+        public Guid UserId { get; set; }
 
         [Required]
-        public Guid TicketID { get; set; }
+        public Guid TicketId { get; set; }
 
     }
 }
