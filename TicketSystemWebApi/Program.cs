@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Text;
 using TicketSystemWebApi.Helpers;
 using TicketSystemWebApi.Helpers.Jwt;
@@ -50,9 +51,15 @@ builder.Services.AddSingleton(emailConfiguration);
 // Dependency injection - inverse of control (for email sending). Mapping interface to object.
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
+// Get Serilog configuration from "appsettings.json".
+builder.Host.UseSerilog((context, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseSerilogRequestLogging();
+
 if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
