@@ -1,3 +1,4 @@
+using Serilog;
 using System.Text.RegularExpressions;
 using TicketSystemWebApp.Services;
 
@@ -34,9 +35,15 @@ builder.Services.AddAntiforgery(opt =>
     opt.Cookie.Name = string.Format(".TicketSystem.Antiforgery.{0}", Regex.Replace(Convert.ToBase64String(Guid.NewGuid().ToByteArray()), "[/+=]", ""));
 });
 
+// Get Serilog configuration from "appsettings.json".
+builder.Host.UseSerilog((context, configuration) => configuration
+    .ReadFrom.Configuration(context.Configuration));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseSerilogRequestLogging();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
